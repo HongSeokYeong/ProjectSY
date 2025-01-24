@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameplayTagContainer.h"
+#include "ScalableFloat.h"
 #include "SYStructTypes.generated.h"
 
 class USYPlayerLinkedAnimLayer;
@@ -36,4 +37,10 @@ struct FSYPlayerWeaponData
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (TitleProperty = "InputTag"))
 	TArray<FSYPlayerAbilitySet> DefaultWeaponAbilities;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FScalableFloat WeaponBaseDamage;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSoftObjectPtr<UTexture2D> SoftWeaponIconTexture;
 };

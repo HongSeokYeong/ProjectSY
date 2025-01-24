@@ -2,7 +2,6 @@
 
 
 #include "AbilitySystem/SYAbilitySystemComponent.h"
-#include "AbilitySystem/Abilities/SYGameplayAbility.h"
 #include "AbilitySystem/Abilities/SYPlayerGameplayAbility.h"
 
 void USYAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInputTag)

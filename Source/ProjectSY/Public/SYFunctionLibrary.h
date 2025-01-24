@@ -4,16 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "SYTypes/SYEnumTypes.h"
 #include "SYFunctionLibrary.generated.h"
 
 class USYAbilitySystemComponent;
-
-UENUM()
-enum class ESYConfirmType : uint8
-{
-	Yes,
-	No
-};
+class USYPawnCombatComponent;
 
 /**
  *
@@ -24,7 +19,7 @@ class PROJECTSY_API USYFunctionLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	
+
 	static TObjectPtr<USYAbilitySystemComponent> NativeGetSYASCFromActor(TObjectPtr<AActor> InActor);
 
 	UFUNCTION(BlueprintCallable, Category = "SY|FunctionLibrary")
@@ -37,4 +32,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "SY|FunctionLibrary", meta = (DisplayName = "Does Actor Have tag", ExpandEnumAsExecs = "OutConfirmType"))
 	static void BP_DoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck, ESYConfirmType& OutConfirmType);
+
+	static TObjectPtr<USYPawnCombatComponent> NativeGetPawnCombatComponentFromActor(AActor* InActor);
+	
+	UFUNCTION(BlueprintCallable, Category = "SY|FunctionLibrary", meta = (DisplayName = "GetPawnCombatComponentFromActor", ExpandEnumAsExecs = "OutValidType"))
+	static USYPawnCombatComponent* BP_GetPawnCombatComponentFromActor(AActor* InActor, ESYValidType& OutValidType);
 };

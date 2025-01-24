@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
+#include "SYTypes/SYEnumTypes.h"
 #include "SYGameplayAbility.generated.h"
 
 class USYPawnCombatComponent;
@@ -36,4 +37,9 @@ protected:
 
 	UFUNCTION(BlueprintPure, Category = "SY|Ability")
 	USYAbilitySystemComponent* GetSYAbilitySystemComponentFromActorInfo() const;
+
+	FActiveGameplayEffectHandle NativeApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle);
+
+	UFUNCTION(BlueprintCallable, Category = "SY|Ability", meta = (DisplayName = "Apply Gameplay Effect Spec Handle To Target Actor", ExpandEnumAsExecs = "OutSuccessType"))
+	FActiveGameplayEffectHandle BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle, ESYSuccessType& OutSuccessType);
 };

@@ -7,6 +7,8 @@
 #include "SYEnemyCharacter.generated.h"
 
 class USYEnemyCombatComponent;
+class USYEnemyUIComponent;
+class UWidgetComponent;
 
 /**
  * 
@@ -19,11 +21,25 @@ class PROJECTSY_API ASYEnemyCharacter : public ASYBaseCharacter
 public:
 	ASYEnemyCharacter();
 
+	virtual TObjectPtr<USYPawnCombatComponent> GetPawnCombatComponent() const override;
+
+	virtual TObjectPtr<USYPawnUIComponent> GetPawnUIComponent() const override;
+
+	virtual TObjectPtr<USYEnemyUIComponent> GetEnemyUIComponent	() const override;
+
 protected:
+	virtual void BeginPlay() override;
+
 	virtual void PossessedBy(AController* NewController) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<USYEnemyCombatComponent> EnemyCombatComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
+	TObjectPtr<USYEnemyUIComponent> EnemyUIComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
+	TObjectPtr<UWidgetComponent> EnemyHealthWidgetComponent;
 
 private:
 	void InitEnemyStartUpData();

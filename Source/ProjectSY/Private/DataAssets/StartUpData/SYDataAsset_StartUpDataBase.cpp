@@ -6,11 +6,29 @@
 #include "AbilitySystem/Abilities/SYGameplayAbility.h"
 
 void USYDataAsset_StartUpDataBase::GiveToAbilitySystemComponent(TObjectPtr<USYAbilitySystemComponent> InASCToGive, int32 ApplyLevel)
-{	
+{
 	check(InASCToGive);
-	
+
 	GrantAbilities(ActivateOnGivenAbilities, InASCToGive, ApplyLevel);
 	GrantAbilities(ReactiveAbilities, InASCToGive, ApplyLevel);
+
+	if (!StartUpGameplayEffect.IsEmpty())
+	{
+		for (const TSubclassOf< UGameplayEffect>& EffectClass : StartUpGameplayEffect)
+		{
+			if (!EffectClass)
+			{
+				continue;
+			}
+
+			UGameplayEffect* EffectCDO = EffectClass->GetDefaultObject<UGameplayEffect>();
+			InASCToGive->ApplyGameplayEffectToSelf(
+				EffectCDO,
+				ApplyLevel,
+				InASCToGive->MakeEffectContext()
+				);
+		}
+	}
 }
 
 void USYDataAsset_StartUpDataBase::GrantAbilities(const TArray<TSubclassOf<USYGameplayAbility>>& InAbilitiesToGive, TObjectPtr<USYAbilitySystemComponent> InASCToGive, int32 ApplyLevel)
@@ -20,7 +38,7 @@ void USYDataAsset_StartUpDataBase::GrantAbilities(const TArray<TSubclassOf<USYGa
 		return;
 	}
 
-	for (const  TSubclassOf<USYGameplayAbility>& Ability : InAbilitiesToGive)
+	for (const TSubclassOf<USYGameplayAbility>& Ability : InAbilitiesToGive)
 	{
 		if (!Ability)
 		{

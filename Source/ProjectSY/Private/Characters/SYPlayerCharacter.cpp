@@ -9,10 +9,11 @@
 #include "EnhancedInputSubsystems.h"
 #include "DataAssets/Input/SYDataAsset_InputConfig.h"
 #include "Components/Input/SYPlayerInputComponent.h"
-#include "PlayerGameplayTags.h"
+#include "SYGameplayTags.h"
 #include "AbilitySystem/SYAbilitySystemComponent.h"
 #include "DataAssets/StartUpData/SYDataAsset_PlayerStartUpData.h"
 #include "Components/Combat/SYPlayerCombatComponent.h"
+#include "Components/UI/SYPlayerUIComponent.h"
 
 #include "SYDebugHelper.h"
 
@@ -39,7 +40,24 @@ ASYPlayerCharacter::ASYPlayerCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = 400.0f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.0f;
 
-	PlayerCombatComponents = CreateDefaultSubobject<USYPlayerCombatComponent>(TEXT("SYPlayerCombatComponent"));
+	PlayerCombatComponent = CreateDefaultSubobject<USYPlayerCombatComponent>(TEXT("SYPlayerCombatComponent"));
+
+	PlayerUIComponent = CreateDefaultSubobject<USYPlayerUIComponent>(TEXT("SYPlayerUIComponent"));
+}
+
+TObjectPtr<USYPawnCombatComponent> ASYPlayerCharacter::GetPawnCombatComponent() const
+{
+	return PlayerCombatComponent;
+}
+
+TObjectPtr<USYPawnUIComponent> ASYPlayerCharacter::GetPawnUIComponent() const
+{
+	return PlayerUIComponent;
+}
+
+TObjectPtr<USYPlayerUIComponent> ASYPlayerCharacter::GetPlayerUIComponent() const
+{
+	return PlayerUIComponent;
 }
 
 void ASYPlayerCharacter::PossessedBy(AController* NewController)
@@ -71,8 +89,8 @@ void ASYPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 	USYPlayerInputComponent* SYPlayerInputComponent = CastChecked<USYPlayerInputComponent>(PlayerInputComponent);
 
-	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, PlayerGamePlayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ASYPlayerCharacter::Input_Move);
-	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, PlayerGamePlayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ASYPlayerCharacter::Input_Look);
+	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, SYGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ASYPlayerCharacter::Input_Move);
+	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, SYGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ASYPlayerCharacter::Input_Look);
 
 	SYPlayerInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ASYPlayerCharacter::Input_AbilityInputPressed, &ASYPlayerCharacter::Input_AbilityInputReleased);
 }

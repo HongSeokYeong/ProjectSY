@@ -27,6 +27,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "SY|Ability")
 	USYPlayerCombatComponent* GetPlayerCombatComponentFromActorInfo();
 
+	UFUNCTION(BlueprintPure, Category = "SY|Ability")
+	FGameplayEffectSpecHandle MakePlayerDamageEffectSpeceHandle(TSubclassOf<UGameplayEffect> EffectClass, float InWeaponBaseDamage, FGameplayTag InCurrentAttackTypeTag, int32 InUsedComboCount);
+
 private:
 	TWeakObjectPtr<ASYPlayerCharacter> CachedPlayerCharacter;
 	TWeakObjectPtr<ASYPlayerController> CachedPlayerController;

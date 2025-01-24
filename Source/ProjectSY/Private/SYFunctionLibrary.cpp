@@ -4,6 +4,7 @@
 #include "SYFunctionLibrary.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/SYAbilitySystemComponent.h"
+#include "Interfaces/SYPawnCombatInterface.h"
 
 TObjectPtr<USYAbilitySystemComponent> USYFunctionLibrary::NativeGetSYASCFromActor(TObjectPtr<AActor> InActor)
 {
@@ -42,4 +43,24 @@ bool USYFunctionLibrary::NativeDoesActorHaveTag(TObjectPtr<AActor> InActor, FGam
 void USYFunctionLibrary::BP_DoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck, ESYConfirmType& OutConfirmType)
 {
     OutConfirmType = NativeDoesActorHaveTag(InActor, TagToCheck) ? ESYConfirmType::Yes : ESYConfirmType::No;
+}
+
+TObjectPtr<USYPawnCombatComponent> USYFunctionLibrary::NativeGetPawnCombatComponentFromActor(AActor* InActor)
+{
+    check(InActor);
+
+    if (ISYPawnCombatInterface* PawnCombatInterface = Cast<ISYPawnCombatInterface>(InActor))
+    {
+        return PawnCombatInterface->GetPawnCombatComponent();
+    }
+    return nullptr;
+}
+
+USYPawnCombatComponent* USYFunctionLibrary::BP_GetPawnCombatComponentFromActor(AActor* InActor, ESYValidType& OutValidType)
+{
+    USYPawnCombatComponent* CombatComponent = NativeGetPawnCombatComponentFromActor(InActor);
+
+    OutValidType = CombatComponent ? ESYValidType::Valid : ESYValidType::InValid;
+    
+    return CombatComponent;
 }

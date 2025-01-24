@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "Interfaces/SYPawnCombatInterface.h"
+#include "Interfaces/SYPawnUIInterface.h"
 #include "SYBaseCharacter.generated.h"
 
 class USYAbilitySystemComponent;
@@ -12,7 +14,7 @@ class USYAttributeSet;
 class USYDataAsset_StartUpDataBase;
 
 UCLASS()
-class PROJECTSY_API ASYBaseCharacter : public ACharacter, public IAbilitySystemInterface
+class PROJECTSY_API ASYBaseCharacter : public ACharacter, public IAbilitySystemInterface, public ISYPawnCombatInterface, public ISYPawnUIInterface
 {
 	GENERATED_BODY()
 
@@ -21,6 +23,12 @@ public:
 	ASYBaseCharacter();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	virtual TObjectPtr<USYPawnCombatComponent> GetPawnCombatComponent() const override;
+
+	virtual TObjectPtr<USYPawnUIComponent> GetPawnUIComponent() const override;
+
+	virtual TObjectPtr<USYEnemyUIComponent> GetEnemyUIComponent() const override;
 
 protected:
 	virtual void PossessedBy(AController* NewController) override;

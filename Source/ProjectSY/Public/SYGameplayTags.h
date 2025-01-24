@@ -4,7 +4,7 @@
 
 #include "NativeGameplayTags.h"
 
-namespace PlayerGamePlayTags
+namespace SYGameplayTags
 {
 	// 입력 태그
 	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Move);
@@ -19,13 +19,41 @@ namespace PlayerGamePlayTags
 	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Unequip_Axe);
 	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Light_Axe);
 	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Heavy_Axe);
+	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_HitPause);
 
-	// 아이템 태그
+	// 플레이어 아이템 태그
 	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Weapon_Axe);
 
 	// 이벤트 태그
 	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Equip_Axe);
 	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Unequip_Axe);
+	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_HitPause);
 
+	// 상태 태그
 	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_JumpToFinisher);
+
+	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_SetByCaller_AttackType_Light);
+	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_SetByCaller_AttackType_Heavy);
+
+	// 적  태그
+	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_Melee);
+	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Ability_Ranged);
+
+	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Weapon);
+
+	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Status_Strafing);
+
+	// 공유 이벤트 태그
+	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_MeleeHit);
+	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_HitReact);
+
+	// 공유 능력 태그
+	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Ability_HitReact);
+	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Ability_Death);
+
+	// 공유 셋 태그
+	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_SetByCaller_BaseDamage);
+
+	// 공유 상태 태그
+	PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Dead);
 }

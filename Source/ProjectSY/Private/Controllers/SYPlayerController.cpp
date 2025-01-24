@@ -3,3 +3,12 @@
 
 #include "Controllers/SYPlayerController.h"
 
+ASYPlayerController::ASYPlayerController()
+{
+	PlayerTeamID = FGenericTeamId(0);
+}
+
+FGenericTeamId ASYPlayerController::GetGenericTeamId() const
+{
+	return PlayerTeamID;
+}

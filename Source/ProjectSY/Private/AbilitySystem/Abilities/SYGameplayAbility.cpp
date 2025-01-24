@@ -4,6 +4,7 @@
 #include "AbilitySystem/Abilities/SYGameplayAbility.h"
 #include "AbilitySystem/SYAbilitySystemComponent.h"
 #include "Components/Combat/SYPawnCombatComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 void USYGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
@@ -39,4 +40,24 @@ USYPawnCombatComponent* USYGameplayAbility::GetPawnCombatComponentFromActorInfo(
 USYAbilitySystemComponent* USYGameplayAbility::GetSYAbilitySystemComponentFromActorInfo() const
 {
 	return Cast<USYAbilitySystemComponent>(CurrentActorInfo->AbilitySystemComponent);
+}
+
+FActiveGameplayEffectHandle USYGameplayAbility::NativeApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle)
+{
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+
+	check(TargetASC && InSpecHandle.IsValid());
+
+	return GetSYAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(
+		*InSpecHandle.Data	,
+		TargetASC
+	);
+}
+
+FActiveGameplayEffectHandle USYGameplayAbility::BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& InSpecHandle, ESYSuccessType& OutSuccessType)
+{
+	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = NativeApplyEffectSpecHandleToTarget(TargetActor, InSpecHandle);
+	OutSuccessType = ActiveGameplayEffectHandle.WasSuccessfullyApplied() ? ESYSuccessType::Successful : ESYSuccessType::Failed;
+
+	return ActiveGameplayEffectHandle;
 }

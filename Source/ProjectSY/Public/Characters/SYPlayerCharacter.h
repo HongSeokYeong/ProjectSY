@@ -11,6 +11,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class USYDataAsset_InputConfig;
 class USYPlayerCombatComponent;
+class USYPlayerUIComponent;
 struct FInputActionValue;
 /**
  * 
@@ -22,6 +23,12 @@ class PROJECTSY_API ASYPlayerCharacter : public ASYBaseCharacter
 
 public:
 	ASYPlayerCharacter();
+
+	virtual TObjectPtr<USYPawnCombatComponent> GetPawnCombatComponent() const override;
+
+	virtual TObjectPtr<USYPawnUIComponent> GetPawnUIComponent() const override;
+
+	virtual TObjectPtr<USYPlayerUIComponent> GetPlayerUIComponent() const override;
 	
 protected:
 	virtual void PossessedBy(AController* NewController) override;
@@ -37,7 +44,10 @@ private:
 	TObjectPtr<UCameraComponent> FollowCamera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	USYPlayerCombatComponent* PlayerCombatComponents;
+	USYPlayerCombatComponent* PlayerCombatComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USYPlayerUIComponent> PlayerUIComponent;
 #pragma endregion
 
 	
@@ -54,5 +64,5 @@ private:
 #pragma endregion
 
 public:
-	FORCEINLINE USYPlayerCombatComponent* GetPlayerCombatComponent() const {return PlayerCombatComponents;}
+	FORCEINLINE USYPlayerCombatComponent* GetPlayerCombatComponent() const {return PlayerCombatComponent;}
 };

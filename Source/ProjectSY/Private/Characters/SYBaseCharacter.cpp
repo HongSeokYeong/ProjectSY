@@ -23,6 +23,21 @@ UAbilitySystemComponent* ASYBaseCharacter::GetAbilitySystemComponent() const
 	return SYAbilitySystemComponent;
 }
 
+TObjectPtr<USYPawnCombatComponent> ASYBaseCharacter::GetPawnCombatComponent() const
+{
+	return TObjectPtr<USYPawnCombatComponent>();
+}
+
+TObjectPtr<USYPawnUIComponent> ASYBaseCharacter::GetPawnUIComponent() const
+{
+	return TObjectPtr<USYPawnUIComponent>();
+}
+
+TObjectPtr<USYEnemyUIComponent> ASYBaseCharacter::GetEnemyUIComponent() const
+{
+	return TObjectPtr<USYEnemyUIComponent>();
+}
+
 void ASYBaseCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);

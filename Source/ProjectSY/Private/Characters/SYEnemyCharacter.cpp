@@ -6,8 +6,9 @@
 #include "Components/Combat/SYEnemyCombatComponent.h"
 #include "Engine/AssetManager.h"
 #include "DataAssets/StartUpData/SYDataAsset_EnemyStartUpDataBase.h"
-
-#include "SYDebugHelper.h"
+#include "Components/UI/SYEnemyUIComponent.h"
+#include "Components/WidgetComponent.h"
+#include "Widgets/SYWidgetBase.h"
 
 ASYEnemyCharacter::ASYEnemyCharacter()
 {
@@ -24,6 +25,36 @@ ASYEnemyCharacter::ASYEnemyCharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 1000.0f;
 
  	EnemyCombatComponent = CreateDefaultSubobject<USYEnemyCombatComponent>(TEXT("EnemyCombatComponent"));
+
+	EnemyUIComponent = CreateDefaultSubobject<USYEnemyUIComponent>(TEXT("EnemyUIComponent"));
+
+	EnemyHealthWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("EnemyHealthWidgetComponent"));
+	EnemyHealthWidgetComponent->SetupAttachment(GetMesh());
+}
+
+TObjectPtr<USYPawnCombatComponent> ASYEnemyCharacter::GetPawnCombatComponent() const
+{
+	return EnemyCombatComponent;
+}
+
+TObjectPtr<USYPawnUIComponent> ASYEnemyCharacter::GetPawnUIComponent() const
+{
+	return EnemyUIComponent;
+}
+
+TObjectPtr<USYEnemyUIComponent> ASYEnemyCharacter::GetEnemyUIComponent() const
+{
+	return EnemyUIComponent;
+}
+
+void ASYEnemyCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (USYWidgetBase* HealthWidget = Cast<USYWidgetBase>(EnemyHealthWidgetComponent->GetUserWidgetObject()))
+	{
+		HealthWidget->InitEnemyCreatedWidget(this);
+	}
 }
 
 void ASYEnemyCharacter::PossessedBy(AController* NewController)
@@ -49,8 +80,6 @@ void ASYEnemyCharacter::InitEnemyStartUpData()
 				if (USYDataAsset_StartUpDataBase* LoadedData = CharacterStartUpData.Get())
 				{
 					LoadedData->GiveToAbilitySystemComponent(SYAbilitySystemComponent);
-
-					Debug::Print(TEXT("Enemy Start Up Data Loaded"), FColor::Green);
 				}
 			}
 		)

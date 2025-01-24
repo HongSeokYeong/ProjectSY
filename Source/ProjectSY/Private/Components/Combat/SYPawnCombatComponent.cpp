@@ -3,6 +3,7 @@
 
 #include "Components/Combat/SYPawnCombatComponent.h"
 #include "Items/Weapons/SYWeaponBase.h"
+#include "Components/BoxComponent.h"
 
 #include "SYDebugHelper.h"
 
@@ -12,6 +13,9 @@ void USYPawnCombatComponent::RegisterSpawnedWeapon(FGameplayTag InWeaponTagToReg
 	check(InWeaponToRegister);
 
 	CharacterCarriedWeaponMap.Emplace(InWeaponTagToRegister, InWeaponToRegister);
+
+	InWeaponToRegister->OnWeaponHitTarget.BindUObject(this, &USYPawnCombatComponent::OnHitTargetActor);
+	InWeaponToRegister->OnWeaponPulledFromTarget.BindUObject(this, &USYPawnCombatComponent::OnWeaponPulledFromTargetActor	);
 
 	if (bRegisterAsEquippedWeapon)
 	{
@@ -40,4 +44,35 @@ ASYWeaponBase* USYPawnCombatComponent::GetCharacterCurrentEquippedWeapon() const
 	}
 
 	return GetCharacterCarriedWeaponByTag(CurrentEquippedWeaponTag);
+}
+
+void USYPawnCombatComponent::ToggleWeaponCollision(bool bShouldEnable, EToggleDamageType ToggleDamageType)
+{
+	if (ToggleDamageType == EToggleDamageType::CurrentEquippedWeapon)
+	{
+		ASYWeaponBase* WeaponToToggle = GetCharacterCurrentEquippedWeapon();
+
+		check(WeaponToToggle);
+
+		if (bShouldEnable)
+		{
+			WeaponToToggle->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		}
+		else
+		{
+			WeaponToToggle->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			OverlappedActors.Empty();
+		}
+	}
+
+	// TODO : Handle body collision boxes
+}
+
+void USYPawnCombatComponent::OnHitTargetActor(AActor* HitActor)
+{
+	
+}
+
+void USYPawnCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)
+{
 }

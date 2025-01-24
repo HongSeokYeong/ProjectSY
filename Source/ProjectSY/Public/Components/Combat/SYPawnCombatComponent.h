@@ -9,6 +9,14 @@
 
 class ASYWeaponBase;
 
+UENUM(BlueprintType)
+enum class EToggleDamageType : uint8
+{
+	CurrentEquippedWeapon,
+	LeftHand,
+	RightHand
+};
+
 /**
  *
  */
@@ -29,6 +37,15 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "SY|Combat")
 	ASYWeaponBase* GetCharacterCurrentEquippedWeapon() const;
+
+	UFUNCTION(BlueprintCallable, Category = "SY|Combat")
+	void ToggleWeaponCollision(bool bShouldEnable, EToggleDamageType ToggleDamageType = EToggleDamageType::CurrentEquippedWeapon);
+
+	virtual void OnHitTargetActor(AActor* HitActor);
+	virtual void OnWeaponPulledFromTargetActor(AActor* InteractedActor);
+
+protected:
+	TArray<AActor*> OverlappedActors;
 
 private:
 	TMap<FGameplayTag, TObjectPtr<ASYWeaponBase>> CharacterCarriedWeaponMap;
