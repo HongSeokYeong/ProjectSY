@@ -12,6 +12,7 @@
 class USYAbilitySystemComponent;
 class USYAttributeSet;
 class USYDataAsset_StartUpDataBase;
+class UMotionWarpingComponent;
 
 UCLASS()
 class PROJECTSY_API ASYBaseCharacter : public ACharacter, public IAbilitySystemInterface, public ISYPawnCombatInterface, public ISYPawnUIInterface
@@ -38,6 +39,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
 	USYAttributeSet* SYAttributeSet;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MotionWarping")
+	TObjectPtr<UMotionWarpingComponent> MotionWarpingComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
 	TSoftObjectPtr<USYDataAsset_StartUpDataBase> CharacterStartUpData;

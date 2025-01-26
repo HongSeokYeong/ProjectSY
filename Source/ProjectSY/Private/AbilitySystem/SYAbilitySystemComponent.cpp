@@ -66,3 +66,26 @@ void USYAbilitySystemComponent::RemovedGrantedPlayerWeaponAbilities(UPARAM(ref)T
 
 	InSpecHandlesToRemove.Empty();
 }
+
+bool USYAbilitySystemComponent::TryActivateAbilityByTag(FGameplayTag AbilityTagToActivate)
+{
+	check(AbilityTagToActivate.IsValid());
+
+	TArray<FGameplayAbilitySpec*> FoundAbilitySpec;
+	GetActivatableGameplayAbilitySpecsByAllMatchingTags(AbilityTagToActivate.GetSingleTagContainer(), FoundAbilitySpec);
+
+	if (!FoundAbilitySpec.IsEmpty())
+	{
+		const int32 RandomAbilityIndex = FMath::RandRange(0, FoundAbilitySpec.Num() - 1);
+		FGameplayAbilitySpec* SpecToActivate = FoundAbilitySpec[RandomAbilityIndex];
+
+		check(SpecToActivate);
+
+		if (!SpecToActivate->IsActive())
+		{
+			return TryActivateAbility(SpecToActivate->Handle);
+		}
+	}
+
+	return false;
+}

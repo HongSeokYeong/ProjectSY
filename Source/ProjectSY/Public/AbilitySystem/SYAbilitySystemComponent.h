@@ -24,4 +24,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "SY|Ability")
 	void RemovedGrantedPlayerWeaponAbilities(UPARAM(ref) TArray<FGameplayAbilitySpecHandle>& InSpecHandlesToRemove);
+
+	UFUNCTION(BlueprintCallable, Category = "SY|Ability")
+	bool TryActivateAbilityByTag(FGameplayTag AbilityTagToActivate);
 };

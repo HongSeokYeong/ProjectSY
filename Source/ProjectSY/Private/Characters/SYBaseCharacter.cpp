@@ -4,6 +4,7 @@
 #include "Characters/SYBaseCharacter.h"
 #include "AbilitySystem/SYAbilitySystemComponent.h"
 #include "AbilitySystem/SYAttributeSet.h"
+#include "MotionWarpingComponent.h"
 
 // Sets default values
 ASYBaseCharacter::ASYBaseCharacter()
@@ -14,8 +15,11 @@ ASYBaseCharacter::ASYBaseCharacter()
 
 	GetMesh()->bReceivesDecals = false;
 
-	SYAbilitySystemComponent = CreateDefaultSubobject<USYAbilitySystemComponent>(TEXT("SYAbilitySystemComponent"));
+	SYAbilitySystemComponent = CreateDefaultSubobject<USYAbilitySystemComponent>(TEXT("SYAbilitySystemComponent"));\
+
 	SYAttributeSet = CreateDefaultSubobject<USYAttributeSet>(TEXT("SYAttributeSet"));
+
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 }
 
 UAbilitySystemComponent* ASYBaseCharacter::GetAbilitySystemComponent() const

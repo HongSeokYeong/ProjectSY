@@ -3,6 +3,7 @@
 
 #include "Items/Weapons/SYWeaponBase.h"
 #include "Components/BoxComponent.h"
+#include "SYFunctionLibrary.h"
 
 #include "SYDebugHelper.h"
 
@@ -31,13 +32,12 @@ void ASYWeaponBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedCo
 
 	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
-		if (WeaponOwningPawn != HitPawn)
+		if (USYFunctionLibrary::IsTargetPawnHostile(WeaponOwningPawn, HitPawn))
 		{
 			OnWeaponHitTarget.ExecuteIfBound(OtherActor);
 		}
-
-		// TODO : Implement hit check for enemy characters
 	}
+	// TODO : Implement hit check for enemy characters
 }
 
 void ASYWeaponBase::OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -48,11 +48,10 @@ void ASYWeaponBase::OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComp
 
 	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
-		if (WeaponOwningPawn != HitPawn)
+		if (USYFunctionLibrary::IsTargetPawnHostile(WeaponOwningPawn, HitPawn))
 		{
 			OnWeaponPulledFromTarget.ExecuteIfBound(OtherActor);
 		}
-
-		// TODO : Implement hit check for enemy characters
 	}
+	// TODO : Implement hit check for enemy characterss
 }

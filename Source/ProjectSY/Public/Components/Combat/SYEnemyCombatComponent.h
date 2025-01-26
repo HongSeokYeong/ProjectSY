@@ -14,4 +14,6 @@ class PROJECTSY_API USYEnemyCombatComponent : public USYPawnCombatComponent
 {
 	GENERATED_BODY()
 	
+public:
+	virtual void OnHitTargetActor(AActor* HitActor) override;
 };
