@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/SYAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/SYPlayerGameplayAbility.h"
+#include "SYGameplayTags.h"
 
 void USYAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInputTag)
 {
@@ -24,6 +25,18 @@ void USYAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInpu
 
 void USYAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InInputTag)
 {
+	if (!InInputTag.IsValid() || !InInputTag.MatchesTag(SYGameplayTags::InputTag_MustBeHeld))
+	{
+		return;
+	}
+
+	for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag) && AbilitySpec.IsActive())
+		{
+			CancelAbilityHandle(AbilitySpec.Handle);
+		}
+	}
 }
 
 void USYAbilitySystemComponent::GrantPlayerWeaponAbilities(const TArray<FSYPlayerAbilitySet>& InDefaultWeaponAbilities, int32 ApplyLevel, TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandles)

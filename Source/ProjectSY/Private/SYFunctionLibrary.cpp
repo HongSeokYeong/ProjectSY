@@ -7,6 +7,7 @@
 #include "Interfaces/SYPawnCombatInterface.h"
 #include "GenericTeamAgentInterface.h"
 #include "Kismet/KismetMathLibrary.h"	
+#include "SYGameplayTags.h"
 
 TObjectPtr<USYAbilitySystemComponent> USYFunctionLibrary::NativeGetSYASCFromActor(TObjectPtr<AActor> InActor)
 {
@@ -105,5 +106,22 @@ FGameplayTag USYFunctionLibrary::ComputeHitReactDirectionTag(AActor* InAttacker,
 		OutAngleDifference *= -1.0f;
 	}
 
-	return FGameplayTag();
+	if (OutAngleDifference >= -45.0f && OutAngleDifference <= 45.0f)
+	{
+		return SYGameplayTags::Shared_Status_HitReact_Front;
+	}
+	else if (OutAngleDifference < -45.0f && OutAngleDifference >= -135.0f)
+	{
+		return SYGameplayTags::Shared_Status_HitReact_Left;
+	}
+	else if (OutAngleDifference < -135.0f || OutAngleDifference > 135.0f)
+	{
+		return SYGameplayTags::Shared_Status_HitReact_Back;
+	}
+	else if (OutAngleDifference > 45.0f && OutAngleDifference <= 135.0f)
+	{
+		return SYGameplayTags::Shared_Status_HitReact_Right;
+	}
+
+	return SYGameplayTags::Shared_Status_HitReact_Front;
 }
