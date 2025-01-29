@@ -14,6 +14,7 @@
 #include "DataAssets/StartUpData/SYDataAsset_PlayerStartUpData.h"
 #include "Components/Combat/SYPlayerCombatComponent.h"
 #include "Components/UI/SYPlayerUIComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 #include "SYDebugHelper.h"
 
@@ -92,6 +93,9 @@ void ASYPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, SYGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ASYPlayerCharacter::Input_Move);
 	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, SYGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ASYPlayerCharacter::Input_Look);
 
+	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, SYGameplayTags::InputTag_SwitchTarget, ETriggerEvent::Triggered, this, &ASYPlayerCharacter::Input_SwitchTargetTriggered);
+	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, SYGameplayTags::InputTag_SwitchTarget, ETriggerEvent::Completed, this, &ASYPlayerCharacter::Input_SwitchTargetCompleted);
+
 	SYPlayerInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ASYPlayerCharacter::Input_AbilityInputPressed, &ASYPlayerCharacter::Input_AbilityInputReleased);
 }
 
@@ -133,6 +137,22 @@ void ASYPlayerCharacter::Input_Look(const FInputActionValue& InputActionValue)
 	{
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void ASYPlayerCharacter::Input_SwitchTargetTriggered(const FInputActionValue& InputActionValue)
+{
+	SwitchDirection = InputActionValue.Get<FVector2D>();
+}
+
+void ASYPlayerCharacter::Input_SwitchTargetCompleted(const FInputActionValue& InputActionValue)
+{
+	FGameplayEventData Data;
+		
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+		this,
+		SwitchDirection.X > 0.0f ? SYGameplayTags::Player_Event_SwitchTarget_Right : SYGameplayTags::Player_Event_SwitchTarget_Left,
+		Data
+	);
 }
 
 void ASYPlayerCharacter::Input_AbilityInputPressed(FGameplayTag InInputTag)

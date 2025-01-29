@@ -26,7 +26,7 @@ void USYFunctionLibrary::AddGameplayTagToActorIfNone(AActor* InActor, FGameplayT
 	}
 }
 
-void USYFunctionLibrary::RemoveGameplayFromActorIfFound(AActor* InActor, FGameplayTag TagToRemove)
+void USYFunctionLibrary::RemoveGameplayTagFromActorIfFound(AActor* InActor, FGameplayTag TagToRemove)
 {
 	USYAbilitySystemComponent* ASC = NativeGetSYASCFromActor(InActor);
 
@@ -124,4 +124,23 @@ FGameplayTag USYFunctionLibrary::ComputeHitReactDirectionTag(AActor* InAttacker,
 	}
 
 	return SYGameplayTags::Shared_Status_HitReact_Front;
+}
+
+bool USYFunctionLibrary::IsValidBlock(AActor* InAttacker, AActor* InDefender)
+{
+	check(InAttacker && InDefender);
+
+	const float DotResult = FVector::DotProduct(InAttacker->GetActorForwardVector(), InDefender->GetActorForwardVector());
+
+	return DotResult < 0.1f;
+}
+
+bool USYFunctionLibrary::ApplyGameplayEffectSpecHandleToTargetActor(AActor* InInstigator, AActor* InTargetActor, const FGameplayEffectSpecHandle& InSpecHandle)
+{
+	USYAbilitySystemComponent* SourceASC = NativeGetSYASCFromActor(InInstigator);
+	USYAbilitySystemComponent* TargetASC = NativeGetSYASCFromActor(InTargetActor);
+
+	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = SourceASC->ApplyGameplayEffectSpecToTarget(*InSpecHandle.Data, TargetASC);
+
+	return ActiveGameplayEffectHandle.WasSuccessfullyApplied();
 }

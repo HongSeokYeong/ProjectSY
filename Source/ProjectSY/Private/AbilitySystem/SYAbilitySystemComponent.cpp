@@ -19,7 +19,21 @@ void USYAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInpu
 			continue;
 		}
 
-		TryActivateAbility(AbilitySpec.Handle);
+		if (InInputTag.MatchesTag(SYGameplayTags::InputTag_Toggleable))
+		{
+			if (AbilitySpec.IsActive())
+			{
+				CancelAbilityHandle(AbilitySpec.Handle);
+			}
+			else
+			{
+				TryActivateAbility(AbilitySpec.Handle);
+			}
+		}
+		else
+		{
+			TryActivateAbility(AbilitySpec.Handle);
+		}
 	}
 }
 

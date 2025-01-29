@@ -71,7 +71,7 @@ void ASYEnemyCharacter::InitEnemyStartUpData()
 		return;
 	}
 
-	// TODO : 매니저 클래스 UI매니저에 참고
+	// TODO 홍석영 : 매니저 클래스 UI매니저에 참고
 	UAssetManager::GetStreamableManager().RequestAsyncLoad(
 		CharacterStartUpData.ToSoftObjectPath(),
 		FStreamableDelegate::CreateLambda(

@@ -4,6 +4,7 @@
 #include "Components/Combat/SYEnemyCombatComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "SYGameplayTags.h"
+#include "SYFunctionLibrary.h"
 
 #include "SYDebugHelper.h"
 
@@ -19,12 +20,12 @@ void USYEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 	// TODO : Implement block check
 	bool bIsValidBlock = false;
 
-	const bool bIsPlayerBlocking = false;
-	const bool bIsMyAttackUnblockable = false;
+	const bool bIsPlayerBlocking = USYFunctionLibrary::NativeDoesActorHaveTag(HitActor, SYGameplayTags::Player_Status_Blocking);
+	const bool bIsMyAttackUnblockable = USYFunctionLibrary::NativeDoesActorHaveTag(GetOwningPawn(), SYGameplayTags::Enemy_Status_Unbloackable);
 
 	if (bIsPlayerBlocking && !bIsMyAttackUnblockable)
 	{
-		// TODO : check if the block is valid
+		bIsValidBlock = USYFunctionLibrary::IsValidBlock(GetOwningPawn(), HitActor);
 	}
 
 	FGameplayEventData EventData;
@@ -33,7 +34,11 @@ void USYEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 
 	if (bIsValidBlock)
 	{
-		// TODO : Handle successful block
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+			HitActor,
+			SYGameplayTags::Player_Event_SuccessfulBlock,
+			EventData
+		);
 	}
 	else
 	{
