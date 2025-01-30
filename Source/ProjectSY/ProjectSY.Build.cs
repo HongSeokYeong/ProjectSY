@@ -20,7 +20,8 @@ public class ProjectSY : ModuleRules
             "GameplayAbilities",
             "AnimGraphRuntime",
             "MotionWarping",
-            "Niagara"});
+            "Niagara",
+            "NavigationSystem"});
 
         PrivateDependencyModuleNames.AddRange(new string[] { });
 

@@ -16,4 +16,7 @@ class PROJECTSY_API USYEnemyCombatComponent : public USYPawnCombatComponent
 	
 public:
 	virtual void OnHitTargetActor(AActor* HitActor) override;
+
+protected:
+	virtual void ToggleBodyCollisionBoxCollision(bool bShouldEnable, EToggleDamageType ToggleDamageType);
 };

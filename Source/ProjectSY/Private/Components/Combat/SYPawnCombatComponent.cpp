@@ -15,7 +15,7 @@ void USYPawnCombatComponent::RegisterSpawnedWeapon(FGameplayTag InWeaponTagToReg
 	CharacterCarriedWeaponMap.Emplace(InWeaponTagToRegister, InWeaponToRegister);
 
 	InWeaponToRegister->OnWeaponHitTarget.BindUObject(this, &USYPawnCombatComponent::OnHitTargetActor);
-	InWeaponToRegister->OnWeaponPulledFromTarget.BindUObject(this, &USYPawnCombatComponent::OnWeaponPulledFromTargetActor	);
+	InWeaponToRegister->OnWeaponPulledFromTarget.BindUObject(this, &USYPawnCombatComponent::OnWeaponPulledFromTargetActor);
 
 	if (bRegisterAsEquippedWeapon)
 	{
@@ -50,29 +50,40 @@ void USYPawnCombatComponent::ToggleWeaponCollision(bool bShouldEnable, EToggleDa
 {
 	if (ToggleDamageType == EToggleDamageType::CurrentEquippedWeapon)
 	{
-		ASYWeaponBase* WeaponToToggle = GetCharacterCurrentEquippedWeapon();
-
-		check(WeaponToToggle);
-
-		if (bShouldEnable)
-		{
-			WeaponToToggle->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		}
-		else
-		{
-			WeaponToToggle->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-			OverlappedActors.Empty();
-		}
+		ToggleCurrentEquippedWeaponCollision(bShouldEnable);
 	}
-
-	// TODO : Handle body collision boxes
+	else
+	{
+		ToggleBodyCollisionBoxCollision(bShouldEnable, ToggleDamageType);
+	}
 }
 
 void USYPawnCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
-	
+
 }
 
 void USYPawnCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)
+{
+}
+
+void USYPawnCombatComponent::ToggleCurrentEquippedWeaponCollision(bool bShouldEnable)
+{
+	ASYWeaponBase* WeaponToToggle = GetCharacterCurrentEquippedWeapon();
+
+	check(WeaponToToggle);
+
+	if (bShouldEnable)
+	{
+		WeaponToToggle->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	}
+	else
+	{
+		WeaponToToggle->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		OverlappedActors.Empty();
+	}
+}
+
+void USYPawnCombatComponent::ToggleBodyCollisionBoxCollision(bool bShouldEnable, EToggleDamageType ToggleDamageType)
 {
 }

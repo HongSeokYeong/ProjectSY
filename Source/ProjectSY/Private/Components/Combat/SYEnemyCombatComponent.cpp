@@ -5,8 +5,8 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "SYGameplayTags.h"
 #include "SYFunctionLibrary.h"
-
-#include "SYDebugHelper.h"
+#include "Characters/SYEnemyCharacter.h"
+#include "Components/BoxComponent.h"
 
 void USYEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
@@ -47,5 +47,34 @@ void USYEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 			SYGameplayTags::Shared_Event_MeleeHit,
 			EventData
 		);
+	}
+}
+
+void USYEnemyCombatComponent::ToggleBodyCollisionBoxCollision(bool bShouldEnable, EToggleDamageType ToggleDamageType)
+{
+	ASYEnemyCharacter* OwningEnemyCharacter = GetOwningPawn<ASYEnemyCharacter>();
+
+	check(OwningEnemyCharacter);
+
+	UBoxComponent* LeftHandCollisionBox = OwningEnemyCharacter->GetLeftHandCollisionBox();
+	UBoxComponent* RightHandCollisionBox = OwningEnemyCharacter->GetRightHandCollisionBox();
+
+	check(LeftHandCollisionBox && RightHandCollisionBox);
+
+	switch (ToggleDamageType)
+	{
+	case EToggleDamageType::LeftHand:
+		LeftHandCollisionBox->SetCollisionEnabled(bShouldEnable ? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
+		break;
+	case EToggleDamageType::RightHand:
+		RightHandCollisionBox->SetCollisionEnabled(bShouldEnable ? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
+		break;
+	default:
+		break;
+	}
+
+	if (!bShouldEnable)
+	{
+		OverlappedActors.Empty();
 	}
 }
