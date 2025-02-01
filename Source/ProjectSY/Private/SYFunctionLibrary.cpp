@@ -8,6 +8,7 @@
 #include "GenericTeamAgentInterface.h"
 #include "Kismet/KismetMathLibrary.h"	
 #include "SYGameplayTags.h"
+#include "SYTypes/SYCountDownAction.h"
 
 TObjectPtr<USYAbilitySystemComponent> USYFunctionLibrary::NativeGetSYASCFromActor(TObjectPtr<AActor> InActor)
 {
@@ -143,4 +144,43 @@ bool USYFunctionLibrary::ApplyGameplayEffectSpecHandleToTargetActor(AActor* InIn
 	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = SourceASC->ApplyGameplayEffectSpecToTarget(*InSpecHandle.Data, TargetASC);
 
 	return ActiveGameplayEffectHandle.WasSuccessfullyApplied();
+}
+
+void USYFunctionLibrary::CountDown(const UObject* WorldContextObject, float TotalTime, float UpdateInterval, float& OutRemainingTime, ESYCountDownActionInput CountDownInput, UPARAM(DisplayName = "Output")ESYCountDownActionOutput& CountDownOutput, FLatentActionInfo LatentInfo)
+{
+	UWorld* World = nullptr;
+
+	if (GEngine)
+	{
+		World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
+	}
+
+	if (!World)
+	{
+		return;
+	}
+
+	FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+
+	FSYCountDownAction* FoundAction = LatentActionManager.FindExistingAction<FSYCountDownAction>(LatentInfo.CallbackTarget, LatentInfo.UUID);
+
+	if (CountDownInput == ESYCountDownActionInput::Start)
+	{
+		if (!FoundAction)
+		{
+			LatentActionManager.AddNewAction(
+				LatentInfo.CallbackTarget,
+				LatentInfo.UUID,
+				new FSYCountDownAction(TotalTime, UpdateInterval, OutRemainingTime, CountDownOutput, LatentInfo)
+			);
+		}
+	}
+
+	if (CountDownInput == ESYCountDownActionInput::Cancel)
+	{
+		if (FoundAction)
+		{
+			FoundAction->CancelAction();
+		}
+	}
 }

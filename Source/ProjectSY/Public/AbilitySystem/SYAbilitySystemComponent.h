@@ -20,7 +20,7 @@ public:
 	void OnAbilityInputReleased(const FGameplayTag& InInputTag);
 
 	UFUNCTION(BlueprintCallable, Category = "SY|Ability", meta = (ApplyLevel = "1"))
-	void GrantPlayerWeaponAbilities(const TArray<FSYPlayerAbilitySet>& InDefaultWeaponAbilities, int32 ApplyLevel, TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandles);
+	void GrantPlayerWeaponAbilities(const TArray<FSYPlayerAbilitySet>& InDefaultWeaponAbilities, const TArray<FSYPlayerSpecialAbilitySet>& InSpecialWeaponAbilities, int32 ApplyLevel, TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandles);
 
 	UFUNCTION(BlueprintCallable, Category = "SY|Ability")
 	void RemovedGrantedPlayerWeaponAbilities(UPARAM(ref) TArray<FGameplayAbilitySpecHandle>& InSpecHandlesToRemove);

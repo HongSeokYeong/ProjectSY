@@ -15,6 +15,7 @@
 #include "Components/Combat/SYPlayerCombatComponent.h"
 #include "Components/UI/SYPlayerUIComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "GameMode/SYBaseGameMode.h"
 
 #include "SYDebugHelper.h"
 
@@ -69,7 +70,30 @@ void ASYPlayerCharacter::PossessedBy(AController* NewController)
 	{
 		if (USYDataAsset_StartUpDataBase* LoadedData = CharacterStartUpData.LoadSynchronous())
 		{
-			LoadedData->GiveToAbilitySystemComponent(SYAbilitySystemComponent);
+			int32 AbilityApplyLevel = 1;
+
+			if (ASYBaseGameMode* BaseGameMode = GetWorld()->GetAuthGameMode<ASYBaseGameMode>())
+			{
+				switch (BaseGameMode->GetCurrentGameDifficulty())
+				{
+				case ESYGameDifficulty::Easy:
+					AbilityApplyLevel = 4;
+					break;
+				case ESYGameDifficulty::Normal:
+					AbilityApplyLevel = 3;
+					break;
+				case ESYGameDifficulty::Hard:
+					AbilityApplyLevel = 2;
+					break;
+				case ESYGameDifficulty::VeryHard:
+					AbilityApplyLevel = 1;
+					break;
+				default:
+					break;
+				}
+			}
+
+			LoadedData->GiveToAbilitySystemComponent(SYAbilitySystemComponent, AbilityApplyLevel);
 		}
 	}
 }
@@ -95,6 +119,8 @@ void ASYPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, SYGameplayTags::InputTag_SwitchTarget, ETriggerEvent::Triggered, this, &ASYPlayerCharacter::Input_SwitchTargetTriggered);
 	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, SYGameplayTags::InputTag_SwitchTarget, ETriggerEvent::Completed, this, &ASYPlayerCharacter::Input_SwitchTargetCompleted);
+
+	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, SYGameplayTags::InputTag_PickUp_Stones, ETriggerEvent::Started, this, &ASYPlayerCharacter::Input_PickUpStonesStarted);
 
 	SYPlayerInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ASYPlayerCharacter::Input_AbilityInputPressed, &ASYPlayerCharacter::Input_AbilityInputReleased);
 }
@@ -147,10 +173,21 @@ void ASYPlayerCharacter::Input_SwitchTargetTriggered(const FInputActionValue& In
 void ASYPlayerCharacter::Input_SwitchTargetCompleted(const FInputActionValue& InputActionValue)
 {
 	FGameplayEventData Data;
-		
+
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 		this,
 		SwitchDirection.X > 0.0f ? SYGameplayTags::Player_Event_SwitchTarget_Right : SYGameplayTags::Player_Event_SwitchTarget_Left,
+		Data
+	);
+}
+
+void ASYPlayerCharacter::Input_PickUpStonesStarted(const FInputActionValue& InputActionValue)
+{
+	FGameplayEventData Data;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+		this,
+		SYGameplayTags::Player_Event_ConsumeStones,
 		Data
 	);
 }

@@ -11,6 +11,7 @@
 #include "Widgets/SYWidgetBase.h"
 #include "Components/BoxComponent.h"
 #include "SYFunctionLibrary.h"
+#include "GameMode/SYBaseGameMode.h"
 
 ASYEnemyCharacter::ASYEnemyCharacter()
 {
@@ -111,15 +112,38 @@ void ASYEnemyCharacter::InitEnemyStartUpData()
 		return;
 	}
 
+	int32 AbilityApplyLevel = 1;
+
+	if (ASYBaseGameMode* BaseGameMode = GetWorld()->GetAuthGameMode<ASYBaseGameMode>())
+	{
+		switch (BaseGameMode->GetCurrentGameDifficulty())
+		{
+		case ESYGameDifficulty::Easy:
+			AbilityApplyLevel = 1;
+			break;
+		case ESYGameDifficulty::Normal:
+			AbilityApplyLevel = 2;
+			break;
+		case ESYGameDifficulty::Hard:
+			AbilityApplyLevel = 3;
+			break;
+		case ESYGameDifficulty::VeryHard:
+			AbilityApplyLevel = 4;
+			break;
+		default:
+			break;
+		}
+	}
+
 	// TODO 홍석영 : 매니저 클래스 UI매니저에 참고
 	UAssetManager::GetStreamableManager().RequestAsyncLoad(
 		CharacterStartUpData.ToSoftObjectPath(),
 		FStreamableDelegate::CreateLambda(
-			[this]()
+			[this, AbilityApplyLevel]()
 			{
 				if (USYDataAsset_StartUpDataBase* LoadedData = CharacterStartUpData.Get())
 				{
-					LoadedData->GiveToAbilitySystemComponent(SYAbilitySystemComponent);
+					LoadedData->GiveToAbilitySystemComponent(SYAbilitySystemComponent, AbilityApplyLevel);
 				}
 			}
 		)

@@ -28,7 +28,13 @@ public:
 	USYPlayerCombatComponent* GetPlayerCombatComponentFromActorInfo();
 
 	UFUNCTION(BlueprintPure, Category = "SY|Ability")
+	USYPlayerUIComponent* GetPlayerUIComponentFromActorInfo();
+
+	UFUNCTION(BlueprintPure, Category = "SY|Ability")
 	FGameplayEffectSpecHandle MakePlayerDamageEffectSpeceHandle(TSubclassOf<UGameplayEffect> EffectClass, float InWeaponBaseDamage, FGameplayTag InCurrentAttackTypeTag, int32 InUsedComboCount);
+
+	UFUNCTION(BlueprintCallable, Category = "SY|Ability")
+	bool GetAbilityReaminingCooldownByTag(FGameplayTag InCooldownTag, float& TotalCooldownTime, float& ReminingCooldownTime);
 
 private:
 	TWeakObjectPtr<ASYPlayerCharacter> CachedPlayerCharacter;

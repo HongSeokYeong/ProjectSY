@@ -5,6 +5,8 @@
 #include "AbilitySystem/SYAbilitySystemComponent.h"
 #include "Components/Combat/SYPawnCombatComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "SYFunctionLibrary.h"
+#include "SYGameplayTags.h"
 
 void USYGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
@@ -60,4 +62,38 @@ FActiveGameplayEffectHandle USYGameplayAbility::BP_ApplyEffectSpecHandleToTarget
 	OutSuccessType = ActiveGameplayEffectHandle.WasSuccessfullyApplied() ? ESYSuccessType::Successful : ESYSuccessType::Failed;
 
 	return ActiveGameplayEffectHandle;
+}
+
+void USYGameplayAbility::ApplyGameplayEffectSpecHandleToHitResults(const FGameplayEffectSpecHandle& InSpecHandle, const TArray<FHitResult>& InHitResults)
+{
+	if (InHitResults.IsEmpty())
+	{
+		return;
+	}
+
+	APawn* OwningPawn = CastChecked<APawn>(GetAvatarActorFromActorInfo());
+
+	for (const FHitResult& Hit : InHitResults)
+	{
+		if (APawn* HitPawn = Cast<APawn>(Hit.GetActor()))
+		{
+			if (USYFunctionLibrary::IsTargetPawnHostile(OwningPawn, HitPawn))
+			{
+				FActiveGameplayEffectHandle ActiveGameplayEffectHandle = NativeApplyEffectSpecHandleToTarget(HitPawn, InSpecHandle);
+
+				if (ActiveGameplayEffectHandle.WasSuccessfullyApplied())
+				{
+					FGameplayEventData Data;
+					Data.Instigator = OwningPawn;
+					Data.Target = HitPawn;
+
+					UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+						HitPawn,
+						SYGameplayTags::Shared_Event_HitReact,
+						Data
+					);
+				}
+			}
+		}
+	}
 }

@@ -46,7 +46,7 @@ void USYAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InInp
 	}
 }
 
-void USYAbilitySystemComponent::GrantPlayerWeaponAbilities(const TArray<FSYPlayerAbilitySet>& InDefaultWeaponAbilities, int32 ApplyLevel, TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandles)
+void USYAbilitySystemComponent::GrantPlayerWeaponAbilities(const TArray<FSYPlayerAbilitySet>& InDefaultWeaponAbilities, const TArray<FSYPlayerSpecialAbilitySet>& InSpecialWeaponAbilities, int32 ApplyLevel, TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandles)
 {
 	if (InDefaultWeaponAbilities.IsEmpty())
 	{
@@ -54,6 +54,21 @@ void USYAbilitySystemComponent::GrantPlayerWeaponAbilities(const TArray<FSYPlaye
 	}
 
 	for (const FSYPlayerAbilitySet& AbilitySet : InDefaultWeaponAbilities)
+	{
+		if (!AbilitySet.IsValid())
+		{
+			continue;
+		}
+
+		FGameplayAbilitySpec AbilitySpec(AbilitySet.AbilityToGrant);
+		AbilitySpec.SourceObject = GetAvatarActor();
+		AbilitySpec.Level = ApplyLevel;
+		AbilitySpec.DynamicAbilityTags.AddTag(AbilitySet.InputTag);
+
+		OutGrantedAbilitySpecHandles.AddUnique(GiveAbility(AbilitySpec));
+	}
+
+	for (const FSYPlayerSpecialAbilitySet& AbilitySet : InSpecialWeaponAbilities)
 	{
 		if (!AbilitySet.IsValid())
 		{

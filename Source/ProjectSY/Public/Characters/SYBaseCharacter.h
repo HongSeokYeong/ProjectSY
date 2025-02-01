@@ -47,7 +47,7 @@ protected:
 	TSoftObjectPtr<USYDataAsset_StartUpDataBase> CharacterStartUpData;
 
 public:
-	FORCEINLINE USYAbilitySystemComponent* GetSYAbilitySyhstemComponent() const { return SYAbilitySystemComponent; };
+	FORCEINLINE USYAbilitySystemComponent* GetSYAbilitySystemComponent() const { return SYAbilitySystemComponent; };
 
 	FORCEINLINE USYAttributeSet* GetSYAttributeSet() const { return SYAttributeSet; };
 };

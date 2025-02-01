@@ -33,6 +33,11 @@ USYPlayerCombatComponent* USYPlayerGameplayAbility::GetPlayerCombatComponentFrom
 	return GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent();
 }
 
+USYPlayerUIComponent* USYPlayerGameplayAbility::GetPlayerUIComponentFromActorInfo()
+{
+	return GetPlayerCharacterFromActorInfo()->GetPlayerUIComponent();
+}
+
 FGameplayEffectSpecHandle USYPlayerGameplayAbility::MakePlayerDamageEffectSpeceHandle(TSubclassOf<UGameplayEffect> EffectClass, float InWeaponBaseDamage, FGameplayTag InCurrentAttackTypeTag, int32 InUsedComboCount)
 {
 	check(EffectClass);
@@ -59,4 +64,21 @@ FGameplayEffectSpecHandle USYPlayerGameplayAbility::MakePlayerDamageEffectSpeceH
 	}
 
 	return EffectSpecHandle;
+}
+
+bool USYPlayerGameplayAbility::GetAbilityReaminingCooldownByTag(FGameplayTag InCooldownTag, float& TotalCooldownTime, float& RemainingCooldownTime)
+{
+	check(InCooldownTag.IsValid());
+
+	FGameplayEffectQuery CooldownQuery = FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(InCooldownTag.GetSingleTagContainer());
+
+	TArray<TPair<float, float>> TimeRemainingAndDuration = GetAbilitySystemComponentFromActorInfo()->GetActiveEffectsTimeRemainingAndDuration(CooldownQuery);
+
+	if (!TimeRemainingAndDuration.IsEmpty())
+	{
+		RemainingCooldownTime = TimeRemainingAndDuration[0].Key;
+		TotalCooldownTime = TimeRemainingAndDuration[0].Value;
+	}
+
+	return RemainingCooldownTime > 0.0f;
 }
