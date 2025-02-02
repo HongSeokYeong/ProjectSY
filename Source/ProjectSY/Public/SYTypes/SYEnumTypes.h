@@ -45,3 +45,10 @@ enum class ESYGameDifficulty : uint8
 	VeryHard
 
 };
+
+UENUM(BlueprintType)
+enum class ESYInputMode : uint8
+{
+	GameOnly,
+	UIOnly
+};

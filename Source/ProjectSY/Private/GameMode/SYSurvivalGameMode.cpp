@@ -7,6 +7,19 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/TargetPoint.h"
 #include "NavigationSystem.h"
+#include "SYFunctionLibrary.h"
+
+void ASYSurvivalGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+{
+	Super::InitGame(MapName, Options, ErrorMessage);
+
+	ESYGameDifficulty SavedGameDifficulty;
+
+	if (USYFunctionLibrary::TryLoadSavedGameDifficulty(SavedGameDifficulty))
+	{
+		CurrentGameDifficulty = SavedGameDifficulty;
+	}
+}
 
 void ASYSurvivalGameMode::BeginPlay()
 {

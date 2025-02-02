@@ -9,6 +9,9 @@
 #include "Kismet/KismetMathLibrary.h"	
 #include "SYGameplayTags.h"
 #include "SYTypes/SYCountDownAction.h"
+#include "SYGameInstance.h"
+#include "Kismet/GameplayStatics.h"
+#include "SaveGame/SYSaveGame.h"
 
 TObjectPtr<USYAbilitySystemComponent> USYFunctionLibrary::NativeGetSYASCFromActor(TObjectPtr<AActor> InActor)
 {
@@ -183,4 +186,81 @@ void USYFunctionLibrary::CountDown(const UObject* WorldContextObject, float Tota
 			FoundAction->CancelAction();
 		}
 	}
+}
+
+USYGameInstance* USYFunctionLibrary::GetSYGameInstance(const UObject* WorldContextObject)
+{
+	if (GEngine)
+	{
+		if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+		{
+			return World->GetGameInstance<USYGameInstance>();
+		}
+	}
+
+	return nullptr;
+}
+
+void USYFunctionLibrary::ToggleInputMode(const UObject* WorldContextObject, ESYInputMode InInputMode)
+{
+	APlayerController* PlayerController = nullptr;
+
+	if (GEngine)
+	{
+		if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+		{
+			PlayerController = World->GetFirstPlayerController();
+		}
+	}
+
+	if (!PlayerController)
+	{
+		return;
+	}
+
+	FInputModeGameOnly GameOnlyMode;
+
+	FInputModeUIOnly UIOnlyMode;
+	switch (InInputMode)
+	{
+	case ESYInputMode::GameOnly:
+		PlayerController->SetInputMode(GameOnlyMode);
+		PlayerController->bShowMouseCursor = false;
+		break;
+	case ESYInputMode::UIOnly:
+		PlayerController->SetInputMode(UIOnlyMode);
+		PlayerController->bShowMouseCursor = true;
+		break;
+	default:
+		break;
+	}
+}
+
+void USYFunctionLibrary::SaveCurrentGameDifficulty(ESYGameDifficulty InDifficultyToSave)
+{
+	USaveGame* SaveGameObject = UGameplayStatics::CreateSaveGameObject(USYSaveGame::StaticClass());
+
+	if (USYSaveGame* SYSaveGameObject = Cast<USYSaveGame>(SaveGameObject))
+	{
+		SYSaveGameObject->SavedCurrentGameDifficulty = InDifficultyToSave;
+
+		const bool bWasSaved = UGameplayStatics::SaveGameToSlot(SYSaveGameObject, SYGameplayTags::GameData_SaveGame_Slot_1.GetTag().ToString(), 0);
+	}
+}
+
+bool USYFunctionLibrary::TryLoadSavedGameDifficulty(ESYGameDifficulty& OutSavedDifficulty)
+{
+	if (UGameplayStatics::DoesSaveGameExist(SYGameplayTags::GameData_SaveGame_Slot_1.GetTag().ToString(), 0))
+	{
+		USaveGame* SaveGameObject = UGameplayStatics::LoadGameFromSlot(SYGameplayTags::GameData_SaveGame_Slot_1.GetTag().ToString(), 0);
+
+		if (USYSaveGame* SYSaveGameObject = Cast<USYSaveGame>(SaveGameObject))
+		{
+			OutSavedDifficulty = SYSaveGameObject->SavedCurrentGameDifficulty;
+
+			return true;
+		}
+	}
+
+	return false;
 }

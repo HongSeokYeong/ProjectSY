@@ -1,4 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -9,6 +10,7 @@
 
 class USYAbilitySystemComponent;
 class USYPawnCombatComponent;
+class USYGameInstance;
 struct FScalableFloat;
 
 /**
@@ -56,4 +58,16 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "SY|FunctionLibrary", meta = (Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo", ExpandEnumAsExecs = "CountDownInput|CountDownOutput", TotalTime = "1.0", UpdateInterval = "0.1"))
 	static void CountDown(const UObject* WorldContextObject, float TotalTime, float UpdateInterval, float& OutRemainingTime, ESYCountDownActionInput CountDownInput, UPARAM(DisplayName = "Output") ESYCountDownActionOutput & CountDownOutput, FLatentActionInfo LatentInfo);
+
+	UFUNCTION(BlueprintPure, Category = "SY|FunctionLibrary", meta = (WorldContext = "WorldContextObject"))
+	static USYGameInstance* GetSYGameInstance(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintCallable, Category = "SY|FunctionLibrary", meta = (WorldContext = "WorldContextObject"))	
+	static void ToggleInputMode(const UObject* WorldContextObject, ESYInputMode InInputMode);
+
+	UFUNCTION(BlueprintCallable, Category = "SY|FunctionLibrary")
+	static void SaveCurrentGameDifficulty(ESYGameDifficulty InDifficultyToSave);
+
+	UFUNCTION(BlueprintCallable, Category = "SY|FunctionLibrary")
+	static bool TryLoadSavedGameDifficulty(ESYGameDifficulty& OutSavedDifficulty);
 };
