@@ -38,13 +38,13 @@ void USYPlayerCombatComponent::OnHitTargetActor(AActor* HitActor)
 
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 		GetOwningPawn(),
-		SYGameplayTags::Shared_Event_MeleeHit,
+		FGameplayTag::RequestGameplayTag(FName("Shared.Event.MeleeHit")),
 		Data
 	);
 
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 		GetOwningPawn(),
-		SYGameplayTags::Player_Event_HitPause,
+		FGameplayTag::RequestGameplayTag(FName("Player.Event.HitPause")),
 		FGameplayEventData()
 	);
 }
@@ -53,7 +53,7 @@ void USYPlayerCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedA
 {
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 		GetOwningPawn(),
-		SYGameplayTags::Player_Event_HitPause,
+		FGameplayTag::RequestGameplayTag(FName("Player.Event.HitPause")),
 		FGameplayEventData()
 	);
 }

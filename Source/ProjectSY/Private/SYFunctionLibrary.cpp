@@ -112,22 +112,22 @@ FGameplayTag USYFunctionLibrary::ComputeHitReactDirectionTag(AActor* InAttacker,
 
 	if (OutAngleDifference >= -45.0f && OutAngleDifference <= 45.0f)
 	{
-		return SYGameplayTags::Shared_Status_HitReact_Front;
+		return FGameplayTag::RequestGameplayTag(FName("Shared.Status.HitReact.Front"));
 	}
 	else if (OutAngleDifference < -45.0f && OutAngleDifference >= -135.0f)
 	{
-		return SYGameplayTags::Shared_Status_HitReact_Left;
+		return FGameplayTag::RequestGameplayTag(FName("Shared.Status.HitReact.Left"));
 	}
 	else if (OutAngleDifference < -135.0f || OutAngleDifference > 135.0f)
 	{
-		return SYGameplayTags::Shared_Status_HitReact_Back;
+		return FGameplayTag::RequestGameplayTag(FName("Shared.Status.HitReact.Back"));
 	}
 	else if (OutAngleDifference > 45.0f && OutAngleDifference <= 135.0f)
 	{
-		return SYGameplayTags::Shared_Status_HitReact_Right;
+		return FGameplayTag::RequestGameplayTag(FName("Shared.Status.HitReact.Right"));
 	}
 
-	return SYGameplayTags::Shared_Status_HitReact_Front;
+	return FGameplayTag::RequestGameplayTag(FName("Shared.Status.HitReact.Front"));
 }
 
 bool USYFunctionLibrary::IsValidBlock(AActor* InAttacker, AActor* InDefender)
@@ -244,15 +244,15 @@ void USYFunctionLibrary::SaveCurrentGameDifficulty(ESYGameDifficulty InDifficult
 	{
 		SYSaveGameObject->SavedCurrentGameDifficulty = InDifficultyToSave;
 
-		const bool bWasSaved = UGameplayStatics::SaveGameToSlot(SYSaveGameObject, SYGameplayTags::GameData_SaveGame_Slot_1.GetTag().ToString(), 0);
+		const bool bWasSaved = UGameplayStatics::SaveGameToSlot(SYSaveGameObject, FGameplayTag::RequestGameplayTag(FName("GameData.SaveGame.Slot.1")).ToString(), 0);
 	}
 }
 
 bool USYFunctionLibrary::TryLoadSavedGameDifficulty(ESYGameDifficulty& OutSavedDifficulty)
 {
-	if (UGameplayStatics::DoesSaveGameExist(SYGameplayTags::GameData_SaveGame_Slot_1.GetTag().ToString(), 0))
+	if (UGameplayStatics::DoesSaveGameExist(FGameplayTag::RequestGameplayTag(FName("GameData.SaveGame.Slot.1")).ToString(), 0))
 	{
-		USaveGame* SaveGameObject = UGameplayStatics::LoadGameFromSlot(SYGameplayTags::GameData_SaveGame_Slot_1.GetTag().ToString(), 0);
+		USaveGame* SaveGameObject = UGameplayStatics::LoadGameFromSlot(FGameplayTag::RequestGameplayTag(FName("GameData.SaveGame.Slot.1")).ToString(), 0);
 
 		if (USYSaveGame* SYSaveGameObject = Cast<USYSaveGame>(SaveGameObject))
 		{

@@ -37,8 +37,8 @@ void USYPlayerGA_TargetLock::EndAbility(const FGameplayAbilitySpecHandle Handle,
 void USYPlayerGA_TargetLock::OnTargetLockTick(float DeltaTime)
 {
 	if (!CurrentLockedActor ||
-		USYFunctionLibrary::NativeDoesActorHaveTag(CurrentLockedActor, SYGameplayTags::Shared_Status_Dead) ||
-		USYFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), SYGameplayTags::Shared_Status_Dead))
+		USYFunctionLibrary::NativeDoesActorHaveTag(CurrentLockedActor, FGameplayTag::RequestGameplayTag(FName("Shared.Status.Dead"))) ||
+		USYFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), FGameplayTag::RequestGameplayTag(FName("Shared.Status.Dead"))))
 	{
 		CancelTargetLockAbility();
 		return;
@@ -46,8 +46,8 @@ void USYPlayerGA_TargetLock::OnTargetLockTick(float DeltaTime)
 
 	SetTargetLockWidgetPosition();
 
-	const bool bShouldOverrideRotation = !USYFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), SYGameplayTags::Player_Status_Rolling) &&
-		!USYFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), SYGameplayTags::Player_Status_Blocking);
+	const bool bShouldOverrideRotation = !USYFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), FGameplayTag::RequestGameplayTag(FName("Player.Status.Rolling"))) &&
+		!USYFunctionLibrary::NativeDoesActorHaveTag(GetPlayerCharacterFromActorInfo(), FGameplayTag::RequestGameplayTag(FName("Player.Status.Blocking")));
 
 	if (bShouldOverrideRotation)
 	{
@@ -76,11 +76,11 @@ void USYPlayerGA_TargetLock::SwitchTarget(const FGameplayTag& InSwitchDirectionT
 
 	GetAvailableActorsAroundTarget(ActorsOnLeft, ActorsOnRight);
 
-	if (InSwitchDirectionTag == SYGameplayTags::Player_Event_SwitchTarget_Left)
+	if (InSwitchDirectionTag == FGameplayTag::RequestGameplayTag(FName("Player.Event.SwitchTarget.Left")))
 	{
 		NewTargetToLock = GetNearestTargetFromAvailableActors(ActorsOnLeft);
 	}
-	else if (InSwitchDirectionTag == SYGameplayTags::Player_Event_SwitchTarget_Right)
+	else if (InSwitchDirectionTag == FGameplayTag::RequestGameplayTag(FName("Player.Event.SwitchTarget.Right")))
 	{
 		NewTargetToLock = GetNearestTargetFromAvailableActors(ActorsOnRight);
 	}

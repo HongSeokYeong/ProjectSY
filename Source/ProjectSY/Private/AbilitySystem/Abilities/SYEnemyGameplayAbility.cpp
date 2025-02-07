@@ -37,7 +37,7 @@ FGameplayEffectSpecHandle USYEnemyGameplayAbility::MakeEnemyDamageEffectSpecHand
 	);
 
 	EffectSpecHandle.Data->SetSetByCallerMagnitude(
-		SYGameplayTags::Shared_SetByCaller_BaseDamage,
+		FGameplayTag::RequestGameplayTag(FName("Shared.SetByCaller.BaseDamage")),
 		InDamageScalableFloat.GetValueAtLevel(GetAbilityLevel())
 	);
 

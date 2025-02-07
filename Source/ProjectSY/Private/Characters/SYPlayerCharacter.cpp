@@ -114,13 +114,13 @@ void ASYPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 	USYPlayerInputComponent* SYPlayerInputComponent = CastChecked<USYPlayerInputComponent>(PlayerInputComponent);
 
-	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, SYGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ASYPlayerCharacter::Input_Move);
-	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, SYGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ASYPlayerCharacter::Input_Look);
+	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, FGameplayTag::RequestGameplayTag(FName("InputTag.Move")), ETriggerEvent::Triggered, this, &ASYPlayerCharacter::Input_Move);
+	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, FGameplayTag::RequestGameplayTag(FName("InputTag.Look")), ETriggerEvent::Triggered, this, &ASYPlayerCharacter::Input_Look);
 
-	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, SYGameplayTags::InputTag_SwitchTarget, ETriggerEvent::Triggered, this, &ASYPlayerCharacter::Input_SwitchTargetTriggered);
-	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, SYGameplayTags::InputTag_SwitchTarget, ETriggerEvent::Completed, this, &ASYPlayerCharacter::Input_SwitchTargetCompleted);
+	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, FGameplayTag::RequestGameplayTag(FName("InputTag.SwitchTarget")), ETriggerEvent::Triggered, this, &ASYPlayerCharacter::Input_SwitchTargetTriggered);
+	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, FGameplayTag::RequestGameplayTag(FName("InputTag.SwitchTarget")), ETriggerEvent::Completed, this, &ASYPlayerCharacter::Input_SwitchTargetCompleted);
 
-	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, SYGameplayTags::InputTag_PickUp_Stones, ETriggerEvent::Started, this, &ASYPlayerCharacter::Input_PickUpStonesStarted);
+	SYPlayerInputComponent->BindNativeInputAction(InputConfigDataAsset, FGameplayTag::RequestGameplayTag(FName("InputTag.PickUp.Stones")), ETriggerEvent::Started, this, &ASYPlayerCharacter::Input_PickUpStonesStarted);
 
 	SYPlayerInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ASYPlayerCharacter::Input_AbilityInputPressed, &ASYPlayerCharacter::Input_AbilityInputReleased);
 }
@@ -176,7 +176,7 @@ void ASYPlayerCharacter::Input_SwitchTargetCompleted(const FInputActionValue& In
 
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 		this,
-		SwitchDirection.X > 0.0f ? SYGameplayTags::Player_Event_SwitchTarget_Right : SYGameplayTags::Player_Event_SwitchTarget_Left,
+		SwitchDirection.X > 0.0f ? FGameplayTag::RequestGameplayTag(FName("Player.Event.SwitchTarget.Right")) : FGameplayTag::RequestGameplayTag(FName("Player.Event.SwitchTarget.Left")),
 		Data
 	);
 }
@@ -187,7 +187,7 @@ void ASYPlayerCharacter::Input_PickUpStonesStarted(const FInputActionValue& Inpu
 
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 		this,
-		SYGameplayTags::Player_Event_ConsumeStones,
+		FGameplayTag::RequestGameplayTag(FName("Player.Event.ConsumeStones")),
 		Data
 	);
 }

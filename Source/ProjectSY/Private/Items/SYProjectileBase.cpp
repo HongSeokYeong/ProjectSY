@@ -62,7 +62,7 @@ void ASYProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActo
 
 	bool bIsValidBlock = false;
 
-	const bool bIsPlayerBlocking = USYFunctionLibrary::NativeDoesActorHaveTag(HitPawn, SYGameplayTags::Player_Status_Blocking);
+	const bool bIsPlayerBlocking = USYFunctionLibrary::NativeDoesActorHaveTag(HitPawn, FGameplayTag::RequestGameplayTag(FName("Player.Status.Blocking")));
 
 	if (bIsPlayerBlocking)
 	{
@@ -77,7 +77,7 @@ void ASYProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActo
 	{
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 			HitPawn,
-			SYGameplayTags::Player_Event_SuccessfulBlock,
+			FGameplayTag::RequestGameplayTag(FName("Player.Event.SuccessfulBlock")),
 			Data
 		);
 	}
@@ -120,7 +120,7 @@ void ASYProjectileBase::HandleApplyProjectileDamage(APawn* InHitPawn, const FGam
 	{
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 			InHitPawn,
-			SYGameplayTags::Shared_Event_HitReact,
+			FGameplayTag::RequestGameplayTag(FName("Shared.Event.HitReact")),
 			InPayload
 		);
 	}

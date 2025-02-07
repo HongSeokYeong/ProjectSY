@@ -89,7 +89,7 @@ void USYGameplayAbility::ApplyGameplayEffectSpecHandleToHitResults(const FGamepl
 
 					UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 						HitPawn,
-						SYGameplayTags::Shared_Event_HitReact,
+						FGameplayTag::RequestGameplayTag(FName("Shared_Event_HitReact")),
 						Data
 					);
 				}

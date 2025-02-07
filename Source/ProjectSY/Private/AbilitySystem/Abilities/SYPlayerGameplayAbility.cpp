@@ -54,7 +54,7 @@ FGameplayEffectSpecHandle USYPlayerGameplayAbility::MakePlayerDamageEffectSpeceH
 	);
 
 	EffectSpecHandle.Data->SetSetByCallerMagnitude(
-		SYGameplayTags::Shared_SetByCaller_BaseDamage,
+		FGameplayTag::RequestGameplayTag(FName("Shared.SetByCaller.BaseDamage")),
 		InWeaponBaseDamage
 	);
 

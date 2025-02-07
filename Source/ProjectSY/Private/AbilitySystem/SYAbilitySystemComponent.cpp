@@ -19,7 +19,7 @@ void USYAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInpu
 			continue;
 		}
 
-		if (InInputTag.MatchesTag(SYGameplayTags::InputTag_Toggleable) && AbilitySpec.IsActive())
+		if (InInputTag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("InputTag.Toggleable"))) && AbilitySpec.IsActive())
 		{
 			CancelAbilityHandle(AbilitySpec.Handle);
 		}
@@ -32,7 +32,7 @@ void USYAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInpu
 
 void USYAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InInputTag)
 {
-	if (!InInputTag.IsValid() || !InInputTag.MatchesTag(SYGameplayTags::InputTag_MustBeHeld))
+	if (!InInputTag.IsValid() || !InInputTag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("InputTag.MustBeHeld"))))
 	{
 		return;
 	}

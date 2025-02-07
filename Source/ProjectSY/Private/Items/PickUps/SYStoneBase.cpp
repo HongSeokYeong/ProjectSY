@@ -25,6 +25,6 @@ void ASYStoneBase::OnPickUpCollisionSphereOverlap(UPrimitiveComponent* Overlappe
 {
 	if (ASYPlayerCharacter* OverlappedPlayerCharacter = Cast<ASYPlayerCharacter>(OtherActor))
 	{
-		OverlappedPlayerCharacter->GetSYAbilitySystemComponent()->TryActivateAbilityByTag(SYGameplayTags::Player_Ability_PickUp_Stones);
+		OverlappedPlayerCharacter->GetSYAbilitySystemComponent()->TryActivateAbilityByTag(FGameplayTag::RequestGameplayTag(FName("Player.Ability.PickUp.Stones")));
 	}
 }

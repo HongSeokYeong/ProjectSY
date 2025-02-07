@@ -52,16 +52,16 @@ void USYAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 
 		if (GetCurrentRage() == GetMaxRage())
 		{
-			USYFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(), SYGameplayTags::Player_Status_Rage_Full);
+			USYFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(), FGameplayTag::RequestGameplayTag(FName("Player.Status.Rage.Full")));
 		}
 		else if(GetCurrentRage() == 0.0f)
 		{ 
-			USYFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(), SYGameplayTags::Player_Status_Rage_None);
+			USYFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(), FGameplayTag::RequestGameplayTag(FName("Player.Status.Rage.None")));
 		}
 		else
 		{
-			USYFunctionLibrary::RemoveGameplayTagFromActorIfFound(Data.Target.GetAvatarActor(), SYGameplayTags::Player_Status_Rage_Full);
-			USYFunctionLibrary::RemoveGameplayTagFromActorIfFound(Data.Target.GetAvatarActor(), SYGameplayTags::Player_Status_Rage_None);
+			USYFunctionLibrary::RemoveGameplayTagFromActorIfFound(Data.Target.GetAvatarActor(), FGameplayTag::RequestGameplayTag(FName("Player.Status.Rage.Full")));
+			USYFunctionLibrary::RemoveGameplayTagFromActorIfFound(Data.Target.GetAvatarActor(), FGameplayTag::RequestGameplayTag(FName("Player.Status.Rage.None")));
 		}
 
 		if (USYPlayerUIComponent* PlayerUIComponent = CachedPawnUIInterface->GetPlayerUIComponent())
@@ -83,7 +83,7 @@ void USYAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 
 		if (GetCurrentHealth() == 0.0f)
 		{
-			USYFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(), SYGameplayTags::Shared_Status_Dead);
+			USYFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(), FGameplayTag::RequestGameplayTag(FName("Shared.Status.Dead")));
 		}
 	}
 }

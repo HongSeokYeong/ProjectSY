@@ -20,8 +20,8 @@ void USYEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 	// TODO : Implement block check
 	bool bIsValidBlock = false;
 
-	const bool bIsPlayerBlocking = USYFunctionLibrary::NativeDoesActorHaveTag(HitActor, SYGameplayTags::Player_Status_Blocking);
-	const bool bIsMyAttackUnblockable = USYFunctionLibrary::NativeDoesActorHaveTag(GetOwningPawn(), SYGameplayTags::Enemy_Status_Unbloackable);
+	const bool bIsPlayerBlocking = USYFunctionLibrary::NativeDoesActorHaveTag(HitActor, FGameplayTag::RequestGameplayTag(FName("Player.Status.Blocking")));
+	const bool bIsMyAttackUnblockable = USYFunctionLibrary::NativeDoesActorHaveTag(GetOwningPawn(), FGameplayTag::RequestGameplayTag(FName("Enemy.Status.Unbloackable")));
 
 	if (bIsPlayerBlocking && !bIsMyAttackUnblockable)
 	{
@@ -36,7 +36,7 @@ void USYEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 	{
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 			HitActor,
-			SYGameplayTags::Player_Event_SuccessfulBlock,
+			FGameplayTag::RequestGameplayTag(FName("Player.Event.SuccessfulBlock")),
 			EventData
 		);
 	}
@@ -44,7 +44,7 @@ void USYEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 	{
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 			GetOwningPawn(),
-			SYGameplayTags::Shared_Event_MeleeHit,
+			FGameplayTag::RequestGameplayTag(FName("Shared.Event.MeleeHit")),
 			EventData
 		);
 	}
