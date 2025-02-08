@@ -91,7 +91,7 @@
 //
 //	//// 공유 이벤트 태그
 //	//PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_MeleeHit);
-//	////PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_HitReact);
+//	//PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_HitReact);
 //	//PROJECTSY_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_SpawnProjectile);
 //
 //	//// 공유 능력 태그
