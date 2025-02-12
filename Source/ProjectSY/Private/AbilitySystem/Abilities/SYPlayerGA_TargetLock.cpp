@@ -19,8 +19,7 @@
 void USYPlayerGA_TargetLock::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	TryLockOnTarget();
-	InitTargetLockMovement();
-	InitTargetLockMappingContext();
+	
 
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
@@ -108,6 +107,9 @@ void USYPlayerGA_TargetLock::TryLockOnTarget()
 		DrawTargetLockWidget();
 
 		SetTargetLockWidgetPosition();
+
+		InitTargetLockMovement();
+		InitTargetLockMappingContext();
 	}
 	else
 	{
