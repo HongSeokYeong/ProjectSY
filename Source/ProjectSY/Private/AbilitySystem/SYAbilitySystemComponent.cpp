@@ -3,7 +3,7 @@
 
 #include "AbilitySystem/SYAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/SYPlayerGameplayAbility.h"
-#include "SYGameplayTags.h"
+#include "SYDebugHelper.h"
 
 void USYAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInputTag)
 {
@@ -14,6 +14,8 @@ void USYAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInpu
 
 	for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
+		
+	// Debug::Print(FString::Printf(TEXT("%s"), *AbilitySpec.Handle.ToString()));
 		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag))
 		{
 			continue;
@@ -25,6 +27,8 @@ void USYAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInpu
 		}
 		else
 		{
+			Debug::Print(FString::Printf(TEXT("%s"), *AbilitySpec.Handle.ToString()));
+			Debug::Print(FString::Printf(TEXT("%s"), *AbilitySpec.Ability.GetFullName()));
 			TryActivateAbility(AbilitySpec.Handle);
 		}
 	}
@@ -107,6 +111,8 @@ bool USYAbilitySystemComponent::TryActivateAbilityByTag(FGameplayTag AbilityTagT
 	check(AbilityTagToActivate.IsValid());
 
 	TArray<FGameplayAbilitySpec*> FoundAbilitySpec;
+	auto asdf = AbilityTagToActivate.GetSingleTagContainer();
+
 	GetActivatableGameplayAbilitySpecsByAllMatchingTags(AbilityTagToActivate.GetSingleTagContainer(), FoundAbilitySpec);
 
 	if (!FoundAbilitySpec.IsEmpty())
