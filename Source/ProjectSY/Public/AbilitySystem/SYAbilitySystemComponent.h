@@ -8,13 +8,13 @@
 #include "SYAbilitySystemComponent.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class PROJECTSY_API USYAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
-	
+
 public:
 	void OnAbilityInputPressed(const FGameplayTag& InInputTag);
 	void OnAbilityInputReleased(const FGameplayTag& InInputTag);
@@ -27,4 +27,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "SY|Ability")
 	bool TryActivateAbilityByTag(FGameplayTag AbilityTagToActivate);
+
+	UFUNCTION(BlueprintCallable, Category = "SY|Ability")
+	bool TryActivateAbilityByInputTag(FGameplayTag AbilityTagToActivate);
 };

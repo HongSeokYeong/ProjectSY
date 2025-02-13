@@ -4,34 +4,11 @@
 #include "AbilitySystem/SYAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/SYPlayerGameplayAbility.h"
 #include "SYDebugHelper.h"
+#include "Abilities/GameplayAbility.h"
 
 void USYAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInputTag)
 {
-	if (!InInputTag.IsValid())
-	{
-		return;
-	}
-
-	for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
-	{
-		
-	// Debug::Print(FString::Printf(TEXT("%s"), *AbilitySpec.Handle.ToString()));
-		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag))
-		{
-			continue;
-		}
-
-		if (InInputTag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("InputTag.Toggleable"))) && AbilitySpec.IsActive())
-		{
-			CancelAbilityHandle(AbilitySpec.Handle);
-		}
-		else
-		{
-			Debug::Print(FString::Printf(TEXT("%s"), *AbilitySpec.Handle.ToString()));
-			Debug::Print(FString::Printf(TEXT("%s"), *AbilitySpec.Ability.GetFullName()));
-			TryActivateAbility(AbilitySpec.Handle);
-		}
-	}
+	TryActivateAbilityByInputTag(InInputTag);
 }
 
 void USYAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InInputTag)
@@ -111,9 +88,7 @@ bool USYAbilitySystemComponent::TryActivateAbilityByTag(FGameplayTag AbilityTagT
 	check(AbilityTagToActivate.IsValid());
 
 	TArray<FGameplayAbilitySpec*> FoundAbilitySpec;
-	auto asdf = AbilityTagToActivate.GetSingleTagContainer();
-
-	GetActivatableGameplayAbilitySpecsByAllMatchingTags(AbilityTagToActivate.GetSingleTagContainer(), FoundAbilitySpec);
+	GetActivatableGameplayAbilitySpecsByAllMatchingTags(AbilityTagToActivate.GetSingleTagContainer(), FoundAbilitySpec, false);
 
 	if (!FoundAbilitySpec.IsEmpty())
 	{
@@ -125,6 +100,34 @@ bool USYAbilitySystemComponent::TryActivateAbilityByTag(FGameplayTag AbilityTagT
 		if (!SpecToActivate->IsActive())
 		{
 			return TryActivateAbility(SpecToActivate->Handle);
+		}
+	}
+
+	return false;
+}
+
+bool USYAbilitySystemComponent::TryActivateAbilityByInputTag(FGameplayTag AbilityTagToActivate)
+{
+	if (!AbilityTagToActivate.IsValid())
+	{
+		return false;
+	}
+
+	for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+
+		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(AbilityTagToActivate))
+		{
+			continue;
+		}
+
+		if (AbilityTagToActivate.MatchesTag(FGameplayTag::RequestGameplayTag(FName("InputTag.Toggleable"))) && AbilitySpec.IsActive())
+		{
+			CancelAbilityHandle(AbilitySpec.Handle);
+		}
+		else
+		{
+			return TryActivateAbility(AbilitySpec.Handle);
 		}
 	}
 
