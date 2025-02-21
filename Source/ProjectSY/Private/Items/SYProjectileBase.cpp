@@ -50,8 +50,6 @@ void ASYProjectileBase::BeginPlay()
 
 void ASYProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	BP_OnSpawnProjectileHitFX(Hit.ImpactPoint);
-
 	APawn* HitPawn = Cast<APawn>(OtherActor);
 
 	if (!HitPawn || !USYFunctionLibrary::IsTargetPawnHostile(GetInstigator(), HitPawn))
@@ -59,6 +57,8 @@ void ASYProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActo
 		Destroy();
 		return;
 	}
+
+	BP_OnSpawnProjectileHitFX(Hit.ImpactPoint);
 
 	bool bIsValidBlock = false;
 
@@ -100,13 +100,39 @@ void ASYProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* Overlapped
 
 	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
+		bool bIsValidBlock = false;
+
+		const bool bIsPlayerBlocking = USYFunctionLibrary::NativeDoesActorHaveTag(HitPawn, FGameplayTag::RequestGameplayTag(FName("Player.Status.Blocking")));
+
+		if (bIsPlayerBlocking)
+		{
+			bIsValidBlock = USYFunctionLibrary::IsValidBlock(this, HitPawn);
+		}
+
 		FGameplayEventData Data;
 		Data.Instigator = GetInstigator();
 		Data.Target = HitPawn;
 
-		if (USYFunctionLibrary::IsTargetPawnHostile(GetInstigator(), HitPawn))
+		if (bIsValidBlock)
 		{
-			HandleApplyProjectileDamage(HitPawn, Data);
+			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+				HitPawn,
+				FGameplayTag::RequestGameplayTag(FName("Player.Event.SuccessfulBlock")),
+				Data
+			);
+			Destroy();
+		}
+		else
+		{
+			if (USYFunctionLibrary::IsTargetPawnHostile(GetInstigator(), HitPawn))
+			{
+				HandleApplyProjectileDamage(HitPawn, Data);
+
+				if (bIsOverlapDestroy)
+				{
+					Destroy();
+				}
+			}
 		}
 	}
 }

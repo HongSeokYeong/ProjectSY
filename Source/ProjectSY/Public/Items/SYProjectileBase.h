@@ -48,6 +48,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Projectile", meta = (ExposeOnSpawn = "true"))
 	FGameplayEffectSpecHandle ProjectileDamageEffectSpecHandle;
 
+	UPROPERTY(EditAnywhere, Category = "Projectile")
+	bool bIsOverlapDestroy;
+
 	UFUNCTION()
 	virtual void OnProjectileHit( UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 

@@ -14,6 +14,7 @@ void USYGameInstance::Init()
 
 void USYGameInstance::OnPreLoadMap(const FString& MapName)
 {
+	GetSubsystem<USYUIManagerSubsystem>()->WidgetClear();
 	FLoadingScreenAttributes LoadingScreenAttributes;
 	LoadingScreenAttributes.bAutoCompleteWhenLoadingCompletes = true;
 	LoadingScreenAttributes.MinimumLoadingScreenDisplayTime = 2.0f;
@@ -43,4 +44,9 @@ TSoftObjectPtr<UWorld> USYGameInstance::GetGameLevelByTag(FGameplayTag InTag) co
 	}
 
 	return TSoftObjectPtr<UWorld>();
+}
+
+USYUIManagerSubsystem* USYGameInstance::GetUIManagerSubsystem()
+{
+	return GetSubsystem<USYUIManagerSubsystem>();
 }

@@ -8,6 +8,7 @@
 #include "Engine/TargetPoint.h"
 #include "NavigationSystem.h"
 #include "SYFunctionLibrary.h"
+#include "Widgets/SYUIManagerSubsystem.h"
 
 void ASYSurvivalGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
@@ -85,6 +86,11 @@ void ASYSurvivalGameMode::Tick(float DeltaTime)
 			}
 		}
 	}
+}
+
+void ASYSurvivalGameMode::StartPlay()
+{
+	Super::StartPlay();
 }
 
 void ASYSurvivalGameMode::SetCurrentSurvivalGameModeState(ESYSurvivalGameModeState InState)

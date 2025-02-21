@@ -19,7 +19,7 @@ class PROJECTSY_API USYAbilityTask_WaitSpawnEnemies : public UAbilityTask
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "SY|AbilityTasks", meta = (DisplayName = "Wait Gameplay Event And Spawn Enemies", HidePin = "OwningAbility", DefaultToSelf = "OwningAbility", BlueprintInternalUseOnly = "true", NumToSpawn = "1", RandomSpawnRadius = "200"))
-	static USYAbilityTask_WaitSpawnEnemies* WaitSpawnEnemies(UGameplayAbility* OwningAbility, FGameplayTag EventTag, TSoftClassPtr< ASYEnemyCharacter> SoftEnemyClassToSpawn, int32 NumToSpawn, const FVector& SpawnOrigin, float RandomSpawnRadius);
+	static USYAbilityTask_WaitSpawnEnemies* WaitSpawnEnemies(UGameplayAbility* OwningAbility, FGameplayTag EventTag, TArray<TSoftClassPtr< ASYEnemyCharacter>> SoftEnemyClassToSpawnArray, int32 NumToSpawn, const FVector& SpawnOrigin, float RandomSpawnRadius);
 
 	UPROPERTY(BlueprintAssignable)
 	FWaitSpawnEnemiesDelegate OnSpawnFinished;
@@ -32,7 +32,7 @@ public:
 
 private:
 	FGameplayTag CachedEventTag;
-	TSoftClassPtr<ASYEnemyCharacter> CachedSoftEnemyClassToSpawn;
+	TArray<TSoftClassPtr<ASYEnemyCharacter>> CachedSoftEnemyClassToSpawnArray;
 	int32 CachedNumToSpawn;
 	FVector CachedSpawnOrigin;
 	float CachedRandomSpawnRadius;

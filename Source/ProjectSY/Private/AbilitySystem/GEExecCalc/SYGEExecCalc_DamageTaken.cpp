@@ -5,6 +5,7 @@
 #include "AbilitySystem/SYAttributeSet.h"
 #include "SYGameplayTags.h"
 #include "SYDebugHelper.h"
+#include "Widgets/SYUIManagerSubsystem.h"
 
 struct FSYDamageCapture
 {

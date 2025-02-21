@@ -7,11 +7,11 @@
 #include "NavigationSystem.h"
 #include "Characters/SYEnemyCharacter.h"
 
-USYAbilityTask_WaitSpawnEnemies* USYAbilityTask_WaitSpawnEnemies::WaitSpawnEnemies(UGameplayAbility* OwningAbility, FGameplayTag EventTag, TSoftClassPtr<ASYEnemyCharacter> SoftEnemyClassToSpawn, int32 NumToSpawn, const FVector& SpawnOrigin, float RandomSpawnRadius)
+USYAbilityTask_WaitSpawnEnemies* USYAbilityTask_WaitSpawnEnemies::WaitSpawnEnemies(UGameplayAbility* OwningAbility, FGameplayTag EventTag, TArray<TSoftClassPtr<ASYEnemyCharacter>> SoftEnemyClassToSpawnArray, int32 NumToSpawn, const FVector& SpawnOrigin, float RandomSpawnRadius)
 {
     USYAbilityTask_WaitSpawnEnemies* Node = NewAbilityTask<USYAbilityTask_WaitSpawnEnemies>(OwningAbility);
     Node->CachedEventTag = EventTag;
-    Node->CachedSoftEnemyClassToSpawn = SoftEnemyClassToSpawn;
+    Node->CachedSoftEnemyClassToSpawnArray = SoftEnemyClassToSpawnArray;
     Node->CachedNumToSpawn = NumToSpawn;
     Node->CachedSpawnOrigin = SpawnOrigin;
     Node->CachedRandomSpawnRadius = RandomSpawnRadius;
@@ -39,12 +39,15 @@ void USYAbilityTask_WaitSpawnEnemies::OnDestroy(bool bInOwnerFinished)
 
 void USYAbilityTask_WaitSpawnEnemies::OnGameplayEventReceived(const FGameplayEventData* InPayload)
 {
-    if (ensure(!CachedSoftEnemyClassToSpawn.IsNull()))
+    if (ensure(!CachedSoftEnemyClassToSpawnArray.IsEmpty()))
     {
-        UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(
-            CachedSoftEnemyClassToSpawn.ToSoftObjectPath(),
-            FStreamableDelegate::CreateUObject(this, &USYAbilityTask_WaitSpawnEnemies::OnEnemyClassLoaded)
-        );
+        for (const TSoftClassPtr<ASYEnemyCharacter>& EnemyCharacter : CachedSoftEnemyClassToSpawnArray)
+        {
+            UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(
+                EnemyCharacter.ToSoftObjectPath(),
+                FStreamableDelegate::CreateUObject(this, &USYAbilityTask_WaitSpawnEnemies::OnEnemyClassLoaded)
+            );
+        }
     }
     else
     {
@@ -59,18 +62,21 @@ void USYAbilityTask_WaitSpawnEnemies::OnGameplayEventReceived(const FGameplayEve
 
 void USYAbilityTask_WaitSpawnEnemies::OnEnemyClassLoaded()
 {
-    UClass* LoadedClass = CachedSoftEnemyClassToSpawn.Get();
+    // UClass* LoadedClass = CachedSoftEnemyClassToSpawnArray.Get();
     UWorld* World = GetWorld();
 
-    if (!LoadedClass || !World)
+    for (const TSoftClassPtr<ASYEnemyCharacter>& LoadedClass : CachedSoftEnemyClassToSpawnArray)
     {
-        if (ShouldBroadcastAbilityTaskDelegates())
+        if (!LoadedClass.Get() || !World)
         {
-            DidNotSpawn.Broadcast(TArray<ASYEnemyCharacter*>());
-        }
+            if (ShouldBroadcastAbilityTaskDelegates())
+            {
+                DidNotSpawn.Broadcast(TArray<ASYEnemyCharacter*>());
+            }
 
-        EndTask();
-        return;
+            EndTask();
+            return;
+        }
     }
 
     TArray<ASYEnemyCharacter*> SpawnedEnemies;
@@ -87,11 +93,14 @@ void USYAbilityTask_WaitSpawnEnemies::OnEnemyClassLoaded()
 
         const FRotator SpawnFacingRotation = AbilitySystemComponent->GetAvatarActor()->GetActorForwardVector().ToOrientationRotator();
 
-        ASYEnemyCharacter* SpawnedEnemy = World->SpawnActor<ASYEnemyCharacter>(LoadedClass, RandomLocation, SpawnFacingRotation, SpawnParam);
-
-        if (SpawnedEnemy)
+        for (const TSoftClassPtr<ASYEnemyCharacter>& LoadedClass : CachedSoftEnemyClassToSpawnArray)
         {
-            SpawnedEnemies.Add(SpawnedEnemy);
+            ASYEnemyCharacter* SpawnedEnemy = World->SpawnActor<ASYEnemyCharacter>(LoadedClass.Get(), RandomLocation, SpawnFacingRotation, SpawnParam);
+
+            if (SpawnedEnemy)
+            {
+                SpawnedEnemies.Add(SpawnedEnemy);
+            }
         }
     }
 

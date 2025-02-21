@@ -51,6 +51,11 @@ void USYPlayerCombatComponent::OnHitTargetActor(AActor* HitActor)
 
 void USYPlayerCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)
 {
+	if (OverlappedActors.Contains(InteractedActor))
+	{
+		OverlappedActors.Remove(InteractedActor);
+	}
+
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 		GetOwningPawn(),
 		FGameplayTag::RequestGameplayTag(FName("Player.Event.HitPause")),

@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "GameplayTagContainer.h"
+#include "Widgets/SYUIManagerSubsystem.h"
+
 #include "SYGameInstance.generated.h"
 
 USTRUCT(BlueprintType)
@@ -45,4 +47,7 @@ protected	:
 public:
 	UFUNCTION(BlueprintPure, meta = (GameplayTagFilter = "GameData.Level"))
 	TSoftObjectPtr<UWorld> GetGameLevelByTag(FGameplayTag InTag) const;
+
+	UFUNCTION(BlueprintCallable, Category = "SubSystem")
+	USYUIManagerSubsystem* GetUIManagerSubsystem();
 };
