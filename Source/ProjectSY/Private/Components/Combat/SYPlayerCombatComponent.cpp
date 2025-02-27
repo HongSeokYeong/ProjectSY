@@ -51,9 +51,12 @@ void USYPlayerCombatComponent::OnHitTargetActor(AActor* HitActor)
 
 void USYPlayerCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)
 {
-	if (OverlappedActors.Contains(InteractedActor))
+	if (bIsOverlapActorReset)
 	{
-		OverlappedActors.Remove(InteractedActor);
+		if (OverlappedActors.Contains(InteractedActor))
+		{
+			OverlappedActors.Remove(InteractedActor);
+		}
 	}
 
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(

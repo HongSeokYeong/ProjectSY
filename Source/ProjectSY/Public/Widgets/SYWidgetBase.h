@@ -28,4 +28,12 @@ protected:
 public:
 	UFUNCTION(BlueprintCallable)
 	void InitEnemyCreatedWidget(AActor* OwningEnemyActor);
+
+	virtual void ShowWidget();
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (AdvancedDisplay = "On Owning Show UI Widget"))
+	void BP_ShowWidget();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void HideWidget();
 };

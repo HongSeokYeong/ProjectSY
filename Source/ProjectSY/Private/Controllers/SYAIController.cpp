@@ -16,7 +16,7 @@ ASYAIController::ASYAIController(const FObjectInitializer& ObjectInitializer)
 	AISenseConfig_Sight->DetectionByAffiliation.bDetectEnemies = true;
 	AISenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = false;
 	AISenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = false;
-	AISenseConfig_Sight->SightRadius = 5000.0f;
+	AISenseConfig_Sight->SightRadius = 1000.0f;
 	AISenseConfig_Sight->LoseSightRadius = 0.0f;
 	AISenseConfig_Sight->PeripheralVisionAngleDegrees = 360.0f;
 

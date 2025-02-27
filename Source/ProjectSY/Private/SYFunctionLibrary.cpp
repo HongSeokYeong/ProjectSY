@@ -169,7 +169,7 @@ void USYFunctionLibrary::CountDown(const UObject* WorldContextObject, float Tota
 
 	if (CountDownInput == ESYCountDownActionInput::Start)
 	{
-		if (!FoundAction)
+		// if (!FoundAction)
 		{
 			LatentActionManager.AddNewAction(
 				LatentInfo.CallbackTarget,

@@ -48,6 +48,6 @@ public:
 	UFUNCTION(BlueprintPure, meta = (GameplayTagFilter = "GameData.Level"))
 	TSoftObjectPtr<UWorld> GetGameLevelByTag(FGameplayTag InTag) const;
 
-	UFUNCTION(BlueprintCallable, Category = "SubSystem")
+	UFUNCTION(BlueprintCallable, Category = "UI")
 	USYUIManagerSubsystem* GetUIManagerSubsystem();
 };

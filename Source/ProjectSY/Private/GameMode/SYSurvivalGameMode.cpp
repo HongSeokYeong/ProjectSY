@@ -8,7 +8,6 @@
 #include "Engine/TargetPoint.h"
 #include "NavigationSystem.h"
 #include "SYFunctionLibrary.h"
-#include "Widgets/SYUIManagerSubsystem.h"
 
 void ASYSurvivalGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
@@ -91,6 +90,8 @@ void ASYSurvivalGameMode::Tick(float DeltaTime)
 void ASYSurvivalGameMode::StartPlay()
 {
 	Super::StartPlay();
+
+	// GetGameInstance()->GetSubsystem<USYUIManagerSubsystem>()->OpenWidget(FName("WBP_MainMenu"));
 }
 
 void ASYSurvivalGameMode::SetCurrentSurvivalGameModeState(ESYSurvivalGameModeState InState)
@@ -121,7 +122,6 @@ void ASYSurvivalGameMode::PreLoadNextWaveEnemies()
 			continue;
 		}
 
-		// TODO 홍석영 : UI 매니저도 이런식으로 가져올수 있지 않을까????
 		UAssetManager::GetStreamableManager().RequestAsyncLoad(
 			SpawnerInfo.SoftEnemyClassToSpawn.ToSoftObjectPath(),
 			FStreamableDelegate::CreateLambda(
@@ -171,6 +171,10 @@ int32 ASYSurvivalGameMode::TrySpawnWaveEnemies()
 
 		const int32 NumToSpawn = FMath::RandRange(SpawnerInfo.MinPerSpawnCount, SpawnerInfo.MaxPerSpawnCount);
 
+		if (PreLoadedEnemyClassMap.IsEmpty())
+		{
+			return 0 ;
+		}
 		UClass* LoadedEnemyClass = PreLoadedEnemyClassMap.FindChecked(SpawnerInfo.SoftEnemyClassToSpawn);
 
 		for (int32 i = 0; i < NumToSpawn; i++)

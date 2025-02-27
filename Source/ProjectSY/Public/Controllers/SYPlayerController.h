@@ -19,6 +19,7 @@ public:
 	ASYPlayerController();
 
 	virtual FGenericTeamId GetGenericTeamId() const override;
+	virtual void OnPossess(APawn* aPawn) override;
 
 private:
 	FGenericTeamId PlayerTeamID;

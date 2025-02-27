@@ -16,7 +16,6 @@
 #include "Components/UI/SYPlayerUIComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameMode/SYBaseGameMode.h"
-
 #include "SYDebugHelper.h"
 
 ASYPlayerCharacter::ASYPlayerCharacter()

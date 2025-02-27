@@ -5,10 +5,13 @@
 #include "Blueprint/UserWidget.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
+#include "Widgets/SYWidgetBase.h"
 
 void USYUIManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
+
+	FCoreUObjectDelegates::PreLoadMap.AddUObject(this, &USYUIManagerSubsystem::OnPreLoadMap);
 }
 
 void USYUIManagerSubsystem::Deinitialize()
@@ -26,65 +29,84 @@ bool USYUIManagerSubsystem::ShouldCreateSubsystem(UObject* Outer) const
 	return false;
 }
 
-void USYUIManagerSubsystem::OpenWidget(FName WidgetName)
+void USYUIManagerSubsystem::OnPreLoadMap(const FString& MapName)
 {
-	if (TObjectPtr<UUserWidget>* FoundWidget = CreatedWidgets.Find(WidgetName))
+	WidgetClear();
+}
+
+USYWidgetBase* USYUIManagerSubsystem::OpenWidget(FName WidgetName)
+{
+	if (TObjectPtr<USYWidgetBase>* FoundWidget = CreatedWidgets.Find(WidgetName))
 	{
 		(*FoundWidget)->SetVisibility(ESlateVisibility::Visible);
-		return;
+
+		return *FoundWidget;
 	}
 
-	if (TSubclassOf<UUserWidget>* WidgetClassPtr = WidgetClassMap.Find(WidgetName))
+	if (TSubclassOf<USYWidgetBase>* WidgetClassPtr = WidgetClassMap.Find(WidgetName))
 	{
 		if (*WidgetClassPtr)
 		{
-			UUserWidget* WidgetInstance = CreateWidget<UUserWidget>(GetGameInstance()->GetWorld(), *WidgetClassPtr);
+			USYWidgetBase* WidgetInstance = CreateWidget<USYWidgetBase>(GetWorld(), *WidgetClassPtr);
 
 			if (WidgetInstance)
 			{
 				WidgetInstance->AddToViewport();
 				WidgetInstance->SetVisibility(ESlateVisibility::Visible);
+
 				CreatedWidgets.Add(WidgetName, WidgetInstance);
+
+				return WidgetInstance;
 			}
 		}
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[%s] WidgetName is not valid"), *WidgetName.ToString());
+
+		return nullptr;
 	}
+
+	return nullptr;
 }
 
-void USYUIManagerSubsystem::OpenWidgetByClass(TSubclassOf<UUserWidget> WidgetClass)
+USYWidgetBase* USYUIManagerSubsystem::OpenWidgetByClass(TSubclassOf<USYWidgetBase> WidgetClass)
 {
 	if (!IsValid(WidgetClass))
 	{
-		return;
+		UE_LOG(LogTemp, Warning, TEXT("[%s] WidgetClass is not valid"), *WidgetClass->GetFName().ToString());
+		return nullptr;
 	}
 
-	// 생성되어있는 위젯이 있으면 찾아서 활성화
-	if (TObjectPtr<UUserWidget>* FoundWidget = CreatedWidgets.Find(WidgetClass->GetFName()))
+	UBlueprintGeneratedClass* BPClass = Cast<UBlueprintGeneratedClass>(WidgetClass);
+
+	if (TObjectPtr<USYWidgetBase>* FoundWidget = CreatedWidgets.Find(FName(BPClass->ClassGeneratedBy->GetName())))
 	{
-		(*FoundWidget)->SetVisibility(ESlateVisibility::Visible);
-		return;
+		(*FoundWidget)->ShowWidget();
+		return *FoundWidget;
 	}
-	else // 없으면 위젯 생성해서 캐싱하고 활성화
+	else
 	{
-		UUserWidget* WidgetInstance = CreateWidget<UUserWidget>(GetGameInstance()->GetWorld(), WidgetClass);
+		USYWidgetBase* WidgetInstance = CreateWidget<USYWidgetBase>(GetWorld(), WidgetClass);
 
 		if (WidgetInstance)
 		{
 			WidgetInstance->AddToViewport();
-			WidgetInstance->SetVisibility(ESlateVisibility::Visible);
+			WidgetInstance->ShowWidget();
 			CreatedWidgets.Add(WidgetClass->ClassGeneratedBy->GetFName(), WidgetInstance);
+
+			return WidgetInstance;
 		}
 	}
+
+	return nullptr;
 }
 
 void USYUIManagerSubsystem::CloseWidget(FName WidgetName)
 {
-	if (TObjectPtr<UUserWidget>* WidgetInstancePtr = CreatedWidgets.Find(WidgetName))
+	if (TObjectPtr<USYWidgetBase>* WidgetInstancePtr = CreatedWidgets.Find(WidgetName))
 	{
-		(*WidgetInstancePtr)->SetVisibility(ESlateVisibility::Collapsed);
+		(*WidgetInstancePtr)->HideWidget();
 	}
 	else
 	{
@@ -92,9 +114,9 @@ void USYUIManagerSubsystem::CloseWidget(FName WidgetName)
 	}
 }
 
-UUserWidget* USYUIManagerSubsystem::GetWidget(FName WidgetName)
+USYWidgetBase* USYUIManagerSubsystem::GetWidget(FName WidgetName)
 {
-	if (TObjectPtr<UUserWidget>* FoundWidget = CreatedWidgets.Find(WidgetName))
+	if (TObjectPtr<USYWidgetBase>* FoundWidget = CreatedWidgets.Find(WidgetName))
 	{
 		(*FoundWidget)->SetVisibility(ESlateVisibility::Visible);
 		return *FoundWidget;
@@ -105,7 +127,7 @@ UUserWidget* USYUIManagerSubsystem::GetWidget(FName WidgetName)
 	}
 }
 
-UUserWidget* USYUIManagerSubsystem::GetWidgetByClass(TSubclassOf<UUserWidget> WidgetClass)
+USYWidgetBase* USYUIManagerSubsystem::GetWidgetByClass(TSubclassOf<USYWidgetBase> WidgetClass)
 {
 	if (!IsValid(WidgetClass))
 	{

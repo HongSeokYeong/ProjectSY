@@ -18,6 +18,9 @@ class PROJECTSY_API USYPlayerCombatComponent : public USYPawnCombatComponent
 	
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsOverlapActorReset = false;
+
 	UFUNCTION(BlueprintCallable, Category = "SY|Combat")
 	ASYPlayerWeapon* GetPlayerCarriedWeaponByTag(FGameplayTag InWeaponTag) const;
 

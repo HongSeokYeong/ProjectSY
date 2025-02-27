@@ -8,7 +8,7 @@
 #include "SYUIManagerSubsystem.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS(Blueprintable, BlueprintType)
 class PROJECTSY_API USYUIManagerSubsystem : public UGameInstanceSubsystem
@@ -18,30 +18,30 @@ class PROJECTSY_API USYUIManagerSubsystem : public UGameInstanceSubsystem
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
-	 
+
+	virtual void OnPreLoadMap(const FString& MapName);
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	void OpenWidget(FName WidgetName);
+	USYWidgetBase* OpenWidget(FName WidgetName);
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	void OpenWidgetByClass(TSubclassOf<UUserWidget> WidgetClass);
+	USYWidgetBase* OpenWidgetByClass(TSubclassOf<USYWidgetBase> WidgetClass);
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void CloseWidget(FName WidgetName);
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	UUserWidget* GetWidget(FName WidgetName);
+	USYWidgetBase* GetWidget(FName WidgetName);
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	UUserWidget* GetWidgetByClass(TSubclassOf<UUserWidget> WidgetClass);
+	USYWidgetBase* GetWidgetByClass(TSubclassOf<USYWidgetBase> WidgetClass);
 
 	void WidgetClear();
 
-protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	TMap<FName, TSubclassOf<UUserWidget>> WidgetClassMap;
+	TMap<FName, TSubclassOf<USYWidgetBase>> WidgetClassMap;
 
-private:
 	UPROPERTY()
-	TMap<FName, TObjectPtr<UUserWidget>> CreatedWidgets;
+	TMap<FName, TObjectPtr<USYWidgetBase>> CreatedWidgets;
 };
