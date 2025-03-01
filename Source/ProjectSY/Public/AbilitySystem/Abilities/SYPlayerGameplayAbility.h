@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/Abilities/SYGameplayAbility.h"
+#include "Widgets/SYUIManagerSubsystem.h"
 #include "SYPlayerGameplayAbility.generated.h"
 
 class ASYPlayerCharacter;
@@ -28,7 +29,7 @@ public:
 	USYPlayerCombatComponent* GetPlayerCombatComponentFromActorInfo();
 
 	UFUNCTION(BlueprintPure, Category = "SY|Ability")
-	USYPlayerUIComponent* GetPlayerUIComponentFromActorInfo();
+	USYUIManagerSubsystem* GetUIManagerFromActorInfo();
 
 	UFUNCTION(BlueprintPure, Category = "SY|Ability")
 	FGameplayEffectSpecHandle MakePlayerDamageEffectSpeceHandle(TSubclassOf<UGameplayEffect> EffectClass, float InWeaponBaseDamage, FGameplayTag InCurrentAttackTypeTag, int32 InUsedComboCount);
@@ -39,5 +40,6 @@ public:
 private:
 	TWeakObjectPtr<ASYPlayerCharacter> CachedPlayerCharacter;
 	TWeakObjectPtr<ASYPlayerController> CachedPlayerController;
+	TWeakObjectPtr<USYUIManagerSubsystem> CachedUIManager;
 	
 };

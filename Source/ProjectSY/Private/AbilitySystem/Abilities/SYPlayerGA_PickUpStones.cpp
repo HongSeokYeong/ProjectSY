@@ -5,20 +5,21 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Characters/SYPlayerCharacter.h"
 #include "Items/PickUps/SYStoneBase.h"
-#include "Components/UI/SYPlayerUIComponent.h"
+#include "Widgets/SYUIManagerSubsystem.h"
+#include "Widgets/SYPlayerWidget.h"
 
 void USYPlayerGA_PickUpStones::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	GetPlayerUIComponentFromActorInfo()->OnStoneInteracted.Broadcast(true);
+	Cast<USYPlayerWidget>(GetUIManagerFromActorInfo()->GetWidget(FName("WBP_PlayerOverlay")))->OnStoneInteracted.Broadcast(true);
 }
 
 void USYPlayerGA_PickUpStones::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
-	GetPlayerUIComponentFromActorInfo()->OnStoneInteracted.Broadcast(false);
+	Cast<USYPlayerWidget>(GetUIManagerFromActorInfo()->GetWidget(FName("WBP_PlayerOverlay")))->OnStoneInteracted.Broadcast(false);
 }
 void USYPlayerGA_PickUpStones::CollectStones()
 {

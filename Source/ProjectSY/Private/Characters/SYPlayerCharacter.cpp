@@ -13,9 +13,9 @@
 #include "AbilitySystem/SYAbilitySystemComponent.h"
 #include "DataAssets/StartUpData/SYDataAsset_PlayerStartUpData.h"
 #include "Components/Combat/SYPlayerCombatComponent.h"
-#include "Components/UI/SYPlayerUIComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameMode/SYBaseGameMode.h"
+#include "Widgets/SYUIManagerSubsystem.h"
 #include "SYDebugHelper.h"
 
 ASYPlayerCharacter::ASYPlayerCharacter()
@@ -42,8 +42,6 @@ ASYPlayerCharacter::ASYPlayerCharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.0f;
 
 	PlayerCombatComponent = CreateDefaultSubobject<USYPlayerCombatComponent>(TEXT("SYPlayerCombatComponent"));
-
-	PlayerUIComponent = CreateDefaultSubobject<USYPlayerUIComponent>(TEXT("SYPlayerUIComponent"));
 }
 
 TObjectPtr<USYPawnCombatComponent> ASYPlayerCharacter::GetPawnCombatComponent() const
@@ -53,12 +51,7 @@ TObjectPtr<USYPawnCombatComponent> ASYPlayerCharacter::GetPawnCombatComponent() 
 
 TObjectPtr<USYPawnUIComponent> ASYPlayerCharacter::GetPawnUIComponent() const
 {
-	return PlayerUIComponent;
-}
-
-TObjectPtr<USYPlayerUIComponent> ASYPlayerCharacter::GetPlayerUIComponent() const
-{
-	return PlayerUIComponent;
+	return nullptr;
 }
 
 void ASYPlayerCharacter::PossessedBy(AController* NewController)

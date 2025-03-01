@@ -7,7 +7,6 @@
 #include "SYPawnUIInterface.generated.h"
 
 class USYPawnUIComponent;
-class USYPlayerUIComponent;
 class USYEnemyUIComponent;
 
 // This class does not need to be modified.
@@ -27,8 +26,6 @@ class PROJECTSY_API ISYPawnUIInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual TObjectPtr<USYPawnUIComponent> GetPawnUIComponent() const = 0;
-
-	virtual TObjectPtr<USYPlayerUIComponent> GetPlayerUIComponent() const;
 
 	virtual TObjectPtr<USYEnemyUIComponent> GetEnemyUIComponent() const;
 };

@@ -33,9 +33,13 @@ USYPlayerCombatComponent* USYPlayerGameplayAbility::GetPlayerCombatComponentFrom
 	return GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent();
 }
 
-USYPlayerUIComponent* USYPlayerGameplayAbility::GetPlayerUIComponentFromActorInfo()
+USYUIManagerSubsystem* USYPlayerGameplayAbility::GetUIManagerFromActorInfo()
 {
-	return GetPlayerCharacterFromActorInfo()->GetPlayerUIComponent();
+	if (!CachedUIManager.IsValid())
+	{
+		CachedUIManager = GetPlayerCharacterFromActorInfo()->GetGameInstance()->GetSubsystem<USYUIManagerSubsystem>();
+	}
+	return CachedUIManager.IsValid() ? CachedUIManager.Get() : nullptr;
 }
 
 FGameplayEffectSpecHandle USYPlayerGameplayAbility::MakePlayerDamageEffectSpeceHandle(TSubclassOf<UGameplayEffect> EffectClass, float InWeaponBaseDamage, FGameplayTag InCurrentAttackTypeTag, int32 InUsedComboCount)

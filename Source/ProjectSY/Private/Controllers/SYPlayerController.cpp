@@ -6,7 +6,6 @@
 #include "AbilitySystem/SYAbilitySystemComponent.h"
 #include "AbilitySystem/SYAttributeSet.h"
 #include "Components/UI/SYPawnUIComponent.h"
-#include "Components/UI/SYPlayerUIComponent.h"
 
 ASYPlayerController::ASYPlayerController()
 {

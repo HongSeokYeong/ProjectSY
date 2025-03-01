@@ -6,8 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "SYWidgetBase.generated.h"
 
-class USYPlayerUIComponent;
-
 /**
  *
  */
@@ -19,16 +17,7 @@ class PROJECTSY_API USYWidgetBase : public UUserWidget
 protected:
 	virtual void NativeOnInitialized() override;
 
-	UFUNCTION(BlueprintImplementableEvent, meta = (AdvancedDisplay = "On Owning Player UI Component Initialized"))
-	void BP_OnOwningPlayerUIComponentInitialized(USYPlayerUIComponent* OwningPlayerUIComponent);
-
-	UFUNCTION(BlueprintImplementableEvent, meta = (AdvancedDisplay = "On Owning Player UI Component Initialized"))
-	void BP_OnOwningEnemyUIComponentInitialized(USYEnemyUIComponent* OwningEnemyUIComponent);
-
 public:
-	UFUNCTION(BlueprintCallable)
-	void InitEnemyCreatedWidget(AActor* OwningEnemyActor);
-
 	virtual void ShowWidget();
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (AdvancedDisplay = "On Owning Show UI Widget"))

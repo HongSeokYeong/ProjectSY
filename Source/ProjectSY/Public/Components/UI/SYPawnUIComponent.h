@@ -6,8 +6,6 @@
 #include "Components/SYPawnExtensionComponentBase.h"
 #include "SYPawnUIComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPercentChangedDelegate, float, NewPercent);
-
 /**
  * 
  */
@@ -17,6 +15,4 @@ class PROJECTSY_API USYPawnUIComponent : public USYPawnExtensionComponentBase
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(BlueprintAssignable)
-	FOnPercentChangedDelegate OnCurrentHealthChanged;
 };

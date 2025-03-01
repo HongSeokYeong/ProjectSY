@@ -7,7 +7,8 @@
 #include "SYGameplayTags.h"
 #include "Interfaces/SYPawnUIInterface.h"
 #include "Components/UI/SYPawnUIComponent.h"
-#include "Components/UI/SYPlayerUIComponent.h"
+#include "Characters/SYBaseCharacter.h"
+#include "Characters/SYPlayerCharacter.h"
 
 #include "SYDebugHelper.h"
 
@@ -32,16 +33,12 @@ void USYAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 
 	checkf(CachedPawnUIInterface.IsValid(), TEXT("%s didn't implement IPawnUIInterface"), *Data.Target.GetAvatarActor()->GetActorNameOrLabel());
 
-	USYPawnUIComponent* PawnUIComponent = CachedPawnUIInterface->GetPawnUIComponent();
-
-	checkf(PawnUIComponent, TEXT("Couldn't extrac a PawnUIComponent from %s"), *Data.Target.GetAvatarActor()->GetActorNameOrLabel());
-
 	if (Data.EvaluatedData.Attribute == GetCurrentHealthAttribute())
 	{
 		const float NewCurrentHealth = FMath::Clamp(GetCurrentHealth(), 0.0f, GetMaxHealth());
 		SetCurrentHealth(NewCurrentHealth);
 
-		PawnUIComponent->OnCurrentHealthChanged.Broadcast(GetCurrentHealth() / GetMaxHealth());
+		Cast<ASYBaseCharacter>(Data.Target.GetAvatarActor())->OnCurrentHealthChanged.Broadcast(GetCurrentHealth() / GetMaxHealth());
 	}
 
 	if (Data.EvaluatedData.Attribute == GetCurrentRageAttribute())
@@ -54,8 +51,8 @@ void USYAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 		{
 			USYFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(), FGameplayTag::RequestGameplayTag(FName("Player.Status.Rage.Full")));
 		}
-		else if(GetCurrentRage() == 0.0f)
-		{ 
+		else if (GetCurrentRage() == 0.0f)
+		{
 			USYFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(), FGameplayTag::RequestGameplayTag(FName("Player.Status.Rage.None")));
 		}
 		else
@@ -64,9 +61,9 @@ void USYAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 			USYFunctionLibrary::RemoveGameplayTagFromActorIfFound(Data.Target.GetAvatarActor(), FGameplayTag::RequestGameplayTag(FName("Player.Status.Rage.None")));
 		}
 
-		if (USYPlayerUIComponent* PlayerUIComponent = CachedPawnUIInterface->GetPlayerUIComponent())
+		if (ASYPlayerCharacter* PlayerCharacter = Cast<ASYPlayerCharacter>(Data.Target.GetAvatarActor()))
 		{
-			PlayerUIComponent->OnCurrentRageChanged.Broadcast(GetCurrentRage() / GetMaxRage());
+			PlayerCharacter->OnCurrentRageChanged.Broadcast(GetCurrentRage() / GetMaxRage());
 		}
 	}
 
@@ -79,7 +76,7 @@ void USYAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 
 		SetCurrentHealth(NewCurrentHealth);
 
-		PawnUIComponent->OnCurrentHealthChanged.Broadcast(GetCurrentHealth() / GetMaxHealth());
+		Cast<ASYBaseCharacter>(Data.Target.GetAvatarActor())->OnCurrentHealthChanged.Broadcast(GetCurrentHealth() / GetMaxHealth());
 
 		if (GetCurrentHealth() == 0.0f)
 		{

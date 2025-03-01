@@ -12,6 +12,7 @@
 #include "Components/BoxComponent.h"
 #include "SYFunctionLibrary.h"
 #include "GameMode/SYBaseGameMode.h"
+#include "Widgets/SYEnemyWidget.h"
 
 ASYEnemyCharacter::ASYEnemyCharacter()
 {
@@ -64,7 +65,7 @@ void ASYEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (USYWidgetBase* HealthWidget = Cast<USYWidgetBase>(EnemyHealthWidgetComponent->GetUserWidgetObject()))
+	if (USYEnemyWidget* HealthWidget = Cast<USYEnemyWidget>(EnemyHealthWidgetComponent->GetUserWidgetObject()))
 	{
 		HealthWidget->InitEnemyCreatedWidget(this);
 	}

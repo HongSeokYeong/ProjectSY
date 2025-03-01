@@ -9,6 +9,8 @@
 #include "Interfaces/SYPawnUIInterface.h"
 #include "SYBaseCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPercentChangedDelegate, float, NewPercent);
+
 class USYAbilitySystemComponent;
 class USYAttributeSet;
 class USYDataAsset_StartUpDataBase;
@@ -50,4 +52,7 @@ public:
 	FORCEINLINE USYAbilitySystemComponent* GetSYAbilitySystemComponent() const { return SYAbilitySystemComponent; };
 
 	FORCEINLINE USYAttributeSet* GetSYAttributeSet() const { return SYAttributeSet; };
+
+	UPROPERTY(BlueprintAssignable)
+	FOnPercentChangedDelegate OnCurrentHealthChanged;
 };

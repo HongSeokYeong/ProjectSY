@@ -11,7 +11,6 @@ class USpringArmComponent;
 class UCameraComponent;
 class USYDataAsset_InputConfig;
 class USYPlayerCombatComponent;
-class USYPlayerUIComponent;
 struct FInputActionValue;
 /**
  * 
@@ -28,15 +27,12 @@ public:
 
 	virtual TObjectPtr<USYPawnUIComponent> GetPawnUIComponent() const override;
 
-	virtual TObjectPtr<USYPlayerUIComponent> GetPlayerUIComponent() const override;
-	
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void BeginPlay() override;
 
 private:
-#pragma region Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USpringArmComponent> CameraBoom;
 
@@ -46,13 +42,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	USYPlayerCombatComponent* PlayerCombatComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<USYPlayerUIComponent> PlayerUIComponent;
-#pragma endregion
-
-	
-
-#pragma region Inputs
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USYDataAsset_InputConfig> InputConfigDataAsset;
 
@@ -69,8 +58,10 @@ private:
 
 	void Input_AbilityInputPressed(FGameplayTag InInputTag);
 	void Input_AbilityInputReleased(FGameplayTag InInputTag);
-#pragma endregion
 
 public:
 	FORCEINLINE USYPlayerCombatComponent* GetPlayerCombatComponent() const {return PlayerCombatComponent;}
+
+	UPROPERTY(BlueprintAssignable)
+	FOnPercentChangedDelegate OnCurrentRageChanged;
 };

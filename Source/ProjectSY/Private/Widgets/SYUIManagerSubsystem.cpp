@@ -118,7 +118,6 @@ USYWidgetBase* USYUIManagerSubsystem::GetWidget(FName WidgetName)
 {
 	if (TObjectPtr<USYWidgetBase>* FoundWidget = CreatedWidgets.Find(WidgetName))
 	{
-		(*FoundWidget)->SetVisibility(ESlateVisibility::Visible);
 		return *FoundWidget;
 	}
 	else
@@ -133,8 +132,9 @@ USYWidgetBase* USYUIManagerSubsystem::GetWidgetByClass(TSubclassOf<USYWidgetBase
 	{
 		return nullptr;
 	}
-
-	return GetWidget(WidgetClass->GetFName());
+	
+	// return GetWidget(WidgetClass->GetFName());
+	return GetWidget(WidgetClass->ClassGeneratedBy.GetFName());
 }
 
 void USYUIManagerSubsystem::WidgetClear()

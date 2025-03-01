@@ -5,11 +5,6 @@
 
 // Add default functionality here for any ISYPawnUIInterface functions that are not pure virtual.
 
-TObjectPtr<USYPlayerUIComponent> ISYPawnUIInterface::GetPlayerUIComponent() const
-{
-	return TObjectPtr<USYPlayerUIComponent>();
-}
-
 TObjectPtr<USYEnemyUIComponent> ISYPawnUIInterface::GetEnemyUIComponent() const
 {
 	return nullptr;

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
+#include "Widgets/SYUIManagerSubsystem.h"
 #include "AbilitySystem/SYAbilitySystemComponent.h"
 #include "SYAttributeSet.generated.h"
 
@@ -58,4 +59,5 @@ public:
 
 private:
 	TWeakInterfacePtr<ISYPawnUIInterface> CachedPawnUIInterface;
+	TWeakObjectPtr<USYUIManagerSubsystem> CachedUIManager;
 };
